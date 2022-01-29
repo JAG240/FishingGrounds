@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 
@@ -12,34 +10,32 @@ public class PlayerMovement : NetworkBehaviour
 
     #region Private Vars
     private InputManager inputManager;
-    [SerializeField] private CharacterController characterController;
+    private CharacterController characterController;
     private bool _grounded;
     private Vector3 _playerVelocity;
+    private Vector3 _gravity;
     #endregion
 
-    #region Monobehavior
+    #region MonoBehaviour
     //References must be made before this scipt is potentially disabled in start
-    private void Awake()
+    void Awake()
     {
-        //Get required references
         inputManager = InputManager.Instance;
         characterController = GetComponent<CharacterController>();
         _playerVelocity = characterController.velocity;
+        _gravity = Physics.gravity;
     }
 
     void Start()
     {
-        //If this is another player disable camera and scripts update methods
+        //If this is another player disable this scripts update method
         if (!IsLocalPlayer)
-        {
-            //GetComponentInChildren<Camera>().enabled = false;
             enabled = false;
-        }
     } 
+
     //All actions are to be applied to owner client immediately before sending to server to be synced to prevent lag
     void Update()
     {
-        //Check if the player is grounded and normalize velocity.y 
         _grounded = characterController.isGrounded;
         if(_grounded && _playerVelocity.y < -0.5)
         {
@@ -51,26 +47,18 @@ public class PlayerMovement : NetworkBehaviour
         Vector2 keyInput = inputManager.GetPlayerMovement();
         Vector3 movement = keyInput.x * transform.right + keyInput.y * transform.forward;
 
-        //Sync movement to other clients and move
         MovePlayerServerRPC(movement);
         ApplyMovement(movement);
 
-        //Checks if player should jump
-        //physics.gravity is set in project settings > physics 
         if(inputManager.PressedJump() && _grounded)
         {
             PlayerJumpServerRPC();
             Jump();
         }
 
-        //Sync and apply gravity
-        if(!_grounded)
-        {
-            ApplyGravityServerRPC();
-            ApplyGravity();
-        }
+        ApplyGravityServerRPC();
+        ApplyGravity();
 
-        //Sync and apply velocity
         ApplyVelocityServerRPC();
         ApplyVelocity();
     }
@@ -88,12 +76,13 @@ public class PlayerMovement : NetworkBehaviour
 
     private void Jump()
     {
-        _playerVelocity.y += Mathf.Sqrt(_jumpHeight * -Physics.gravity.y);
+        //Gravity is set in project settings > physics 
+        _playerVelocity.y += Mathf.Sqrt(_jumpHeight * -_gravity.y);
     }
 
     private void ApplyGravity()
     {
-        _playerVelocity.y += Physics.gravity.y * Time.deltaTime;
+        _playerVelocity.y += _gravity.y * Time.deltaTime;
     }
 
     private void ApplyVelocity()
