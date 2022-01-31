@@ -59,8 +59,8 @@ public class PlayerMovement : NetworkBehaviour
         ApplyGravityServerRPC();
         ApplyGravity();
 
-        ApplyVelocityServerRPC();
-        ApplyVelocity();
+        ApplyVelocityServerRPC(_playerVelocity);
+        ApplyVelocity(_playerVelocity);
     }
     #endregion
 
@@ -85,9 +85,9 @@ public class PlayerMovement : NetworkBehaviour
         _playerVelocity.y += _gravity.y * Time.deltaTime;
     }
 
-    private void ApplyVelocity()
+    private void ApplyVelocity(Vector3 playerVelocity)
     {
-        characterController.Move(_playerVelocity * Time.deltaTime);
+        characterController.Move(playerVelocity * Time.deltaTime);
     }
     #endregion
 
@@ -118,9 +118,9 @@ public class PlayerMovement : NetworkBehaviour
     }
 
     [ServerRpc]
-    private void ApplyVelocityServerRPC()
+    private void ApplyVelocityServerRPC(Vector3 playerVelocity)
     {
-        ApplyVelocityClientRPC();
+        ApplyVelocityClientRPC(playerVelocity);
     }
     #endregion
 
@@ -163,12 +163,12 @@ public class PlayerMovement : NetworkBehaviour
     }
 
     [ClientRpc]
-    private void ApplyVelocityClientRPC()
+    private void ApplyVelocityClientRPC(Vector3 playerVelocity)
     {
         if (IsOwner)
             return;
 
-        ApplyVelocity();
+        ApplyVelocity(playerVelocity);
     }
     #endregion
 }
