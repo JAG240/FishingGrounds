@@ -10,7 +10,7 @@ public class CameraController : NetworkBehaviour
     [SerializeField] private float _horizontalSpeed = 0.1f;
     #endregion
 
-    #region Private Vars
+    #region Vars
     private Transform _player;
     private float _yRotation = 0f;
     #endregion
@@ -47,10 +47,6 @@ public class CameraController : NetworkBehaviour
 
     void Update()
     {
-        //TO DO: manage this scripts enabled state depending on player's state
-        if (InputManager.Instance.PressedEscape())
-            enabled = false;
-
         Vector2 mouseInput = InputManager.Instance.GetMouseDelta();
 
         //subtracted to give the feeling of non-inverted camera controls
