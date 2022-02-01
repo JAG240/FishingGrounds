@@ -56,5 +56,15 @@ public class InputManager : MonoBehaviour
     {
         return _playerControls.Player.Escape.triggered;
     }
+
+    public bool ToggledRod()
+    {
+        return _playerControls.Player.ToggleRod.triggered;
+    }
+
+    public bool Cast()
+    {
+        return _playerControls.Player.Cast.triggered;
+    }
     #endregion
 }

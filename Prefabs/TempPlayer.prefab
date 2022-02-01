@@ -124,7 +124,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 26.991467
+  field of view: 60
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
@@ -278,6 +278,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _speed: 2
   _jumpHeight: 1
+  allowMovement: 1
 --- !u!114 &387010586356520051
 MonoBehaviour:
   m_ObjectHideFlags: 0

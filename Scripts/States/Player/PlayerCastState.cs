@@ -1,9 +1,9 @@
 using UnityEngine;
-public class PlayerRoamState : PlayerBaseState
+public class PlayerCastState : PlayerBaseState
 {
     public override void EnterState(PlayerStateManager stateManager)
     {
-        stateManager.SetPlayerControls(true);
+        stateManager.SetPlayerControls(false);
     }
 
     public override void ExitState(PlayerStateManager stateManager)
@@ -16,12 +16,6 @@ public class PlayerRoamState : PlayerBaseState
         if (InputManager.Instance.PressedEscape())
         {
             stateManager.SwitchState(stateManager.playerMenuState);
-            return;
-        }
-
-        if (InputManager.Instance.ToggledRod())
-        {
-            stateManager.SwitchState(stateManager.playerFishingState);
             return;
         }
     }

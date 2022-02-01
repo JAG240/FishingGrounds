@@ -1,9 +1,9 @@
 using UnityEngine;
-public class PlayerMenuState : PlayerBaseState
+public class PlayerHookState : PlayerBaseState
 {
     public override void EnterState(PlayerStateManager stateManager)
     {
-        stateManager.SetPlayerControls(false);
+
     }
 
     public override void ExitState(PlayerStateManager stateManager)
@@ -13,7 +13,6 @@ public class PlayerMenuState : PlayerBaseState
 
     public override void UpdateState(PlayerStateManager stateManager)
     {
-        if (InputManager.Instance.PressedEscape())
-            stateManager.SwitchState(stateManager.previousState);
+
     }
 }

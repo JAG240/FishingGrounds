@@ -1,5 +1,5 @@
 using UnityEngine;
-public class PlayerRoamState : PlayerBaseState
+public class PlayerFishingState : PlayerBaseState
 {
     public override void EnterState(PlayerStateManager stateManager)
     {
@@ -19,9 +19,15 @@ public class PlayerRoamState : PlayerBaseState
             return;
         }
 
-        if (InputManager.Instance.ToggledRod())
+        if(InputManager.Instance.ToggledRod())
         {
-            stateManager.SwitchState(stateManager.playerFishingState);
+            stateManager.SwitchState(stateManager.playerRoamState);
+            return;
+        }
+
+        if(InputManager.Instance.Cast())
+        {
+            stateManager.SwitchState(stateManager.playerCastState);
             return;
         }
     }
