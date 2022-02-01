@@ -8,21 +8,22 @@ public class PlayerMovement : NetworkBehaviour
     [SerializeField] private float _jumpHeight;
     #endregion
 
-    #region Private Vars
-    private InputManager inputManager;
-    private CharacterController characterController;
+    #region Vars
+    private InputManager _inputManager;
+    private CharacterController _characterController;
     private bool _grounded;
     private Vector3 _playerVelocity;
     private Vector3 _gravity;
+    public bool allowMovement = true;
     #endregion
 
     #region MonoBehaviour
     //References must be made before this scipt is potentially disabled in start
     void Awake()
     {
-        inputManager = InputManager.Instance;
-        characterController = GetComponent<CharacterController>();
-        _playerVelocity = characterController.velocity;
+        _inputManager = InputManager.Instance;
+        _characterController = GetComponent<CharacterController>();
+        _playerVelocity = _characterController.velocity;
         _gravity = Physics.gravity;
     }
 
@@ -36,7 +37,16 @@ public class PlayerMovement : NetworkBehaviour
     //All actions are to be applied to owner client immediately before sending to server to be synced to prevent lag
     void Update()
     {
-        _grounded = characterController.isGrounded;
+        ApplyGravityServerRPC();
+        ApplyGravity();
+
+        ApplyVelocityServerRPC(_playerVelocity);
+        ApplyVelocity(_playerVelocity);
+
+        if (!allowMovement)
+            return;
+
+        _grounded = _characterController.isGrounded;
         if(_grounded && _playerVelocity.y < -0.5)
         {
             NormalizeVelocityServerRPC();
@@ -44,23 +54,17 @@ public class PlayerMovement : NetworkBehaviour
         }
 
         //Get input values and translate to local space movement 
-        Vector2 keyInput = inputManager.GetPlayerMovement();
+        Vector2 keyInput = _inputManager.GetPlayerMovement();
         Vector3 movement = keyInput.x * transform.right + keyInput.y * transform.forward;
 
         MovePlayerServerRPC(movement);
         ApplyMovement(movement);
 
-        if(inputManager.PressedJump() && _grounded)
+        if(_inputManager.PressedJump() && _grounded)
         {
             PlayerJumpServerRPC();
             Jump();
         }
-
-        ApplyGravityServerRPC();
-        ApplyGravity();
-
-        ApplyVelocityServerRPC(_playerVelocity);
-        ApplyVelocity(_playerVelocity);
     }
     #endregion
 
@@ -71,7 +75,7 @@ public class PlayerMovement : NetworkBehaviour
     }
     private void ApplyMovement(Vector3 movement)
     {
-        characterController.Move(movement * Time.deltaTime * _speed);
+        _characterController.Move(movement * Time.deltaTime * _speed);
     }
 
     private void Jump()
@@ -87,7 +91,7 @@ public class PlayerMovement : NetworkBehaviour
 
     private void ApplyVelocity(Vector3 playerVelocity)
     {
-        characterController.Move(playerVelocity * Time.deltaTime);
+        _characterController.Move(playerVelocity * Time.deltaTime);
     }
     #endregion
 
