@@ -4,9 +4,10 @@ using UnityEngine.SceneManagement;
 
 public class SceneLoader : NetworkBehaviour
 {
-    private void Awake()
+    void Awake()
     {
         DontDestroyOnLoad(this.gameObject);
+        SceneManager.sceneLoaded += CheckHost;
     }
 
     //When starting as host only load scene
@@ -22,9 +23,9 @@ public class SceneLoader : NetworkBehaviour
     }
 
     //When a new scene is loaded, if you are the host start as host. 
-    private void OnLevelWasLoaded(int level)
+    private void CheckHost(Scene scene, LoadSceneMode loadMode)
     {
-        if (!NetworkManager.Singleton.IsClient)
+        if (!NetworkManager.Singleton.IsClient && scene.name != "Main Menu")
             NetworkManager.Singleton.StartHost();
     }
 }
