@@ -22,15 +22,15 @@ public class CameraController : NetworkBehaviour
 
     void Start()
     {
-        //TO DO: read mouse sensitivity options from a settings page
-
         if (!IsLocalPlayer)
         {
             GetComponent<Camera>().enabled = false;
             enabled = false;
+            return;
         }
 
         Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     void OnEnable()

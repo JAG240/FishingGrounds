@@ -29,7 +29,9 @@ public class InputManager : MonoBehaviour
 
     private void OnDisable()
     {
-        _playerControls.Disable();
+        //As OnDisable is called before script is destroyed, we must check if object exists
+        if (_playerControls != null)
+            _playerControls.Disable();
     }
     #endregion
 

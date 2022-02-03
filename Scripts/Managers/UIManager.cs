@@ -4,45 +4,64 @@ using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
-    #region Vars
-    private SceneLoader _sceneLoader;
+    #region Menus
+    [SerializeField] private UIDocument _menu;
+    public VisualTreeAsset mainMenu;
+    public VisualTreeAsset pauseMenu;
     #endregion
 
-    #region Main Menu Elements
-    public Button _startHost;
-    public Button _startClient;
+    #region Vars
+    private static UIManager _instance;
+    public static UIManager Instance { get { return _instance; } }
+    [HideInInspector] public SceneLoader sceneLoader;
+    private MenuBaseDocumentLogic _currentMenu;
+    private MenuBaseDocumentLogic _mainMenuDocLogic = new MainMenuDocumentLogic();
     #endregion
 
     void Awake()
     {
-        DontDestroyOnLoad(this.gameObject);
-        _sceneLoader = GameObject.Find("SceneManager").GetComponent<SceneLoader>();
-        SceneManager.sceneLoaded += GetUIElements;
-    }
-
-    private void GetUIElements(Scene scene, LoadSceneMode loadMode)
-    {
-        if (scene.name == "Main Menu")
-            MainMenuUI();
+        if (_instance != null && _instance != this)
+            Destroy(this.gameObject);
         else
-            HUDUI();
+            _instance = this;
+
+        DontDestroyOnLoad(this.gameObject);
+        sceneLoader = GameObject.Find("SceneManager").GetComponent<SceneLoader>();
     }
 
-    private void MainMenuUI()
+    void Start()
     {
-        var root = GameObject.Find("MainMenu").GetComponent<UIDocument>().rootVisualElement;
-        _startHost = root.Q<Button>("StartHost");
-        _startClient = root.Q<Button>("StartClient");
-
-        _startHost.clicked += _sceneLoader.StartAsHost;
-        _startClient.clicked += _sceneLoader.StartAsClient;
+        SceneManager.sceneLoaded += LoadSceneDefaultMenu;
+        LoadMenu(_mainMenuDocLogic);
     }
 
-    private void HUDUI()
+    private void LoadSceneDefaultMenu(Scene scene, LoadSceneMode loadMode)
     {
-        if (_startHost != null)
-            _startHost.clicked -= _sceneLoader.StartAsHost;
-        if (_startClient != null)
-            _startClient.clicked -= _sceneLoader.StartAsClient;
+        if (_currentMenu != null)
+            UnloadMenu();
+
+        if (scene.name == "Main Menu")
+            LoadMenu(_mainMenuDocLogic);
+    }
+
+    public void LoadMenu(MenuBaseDocumentLogic menuBase)
+    {
+        if (_currentMenu != null)
+            UnloadMenu();
+
+        _menu.visualTreeAsset = menuBase.GetMenu(this);
+        menuBase.GetElements(this, _menu);
+        menuBase.SubscribeEvents(this);
+        _currentMenu = menuBase;
+    }
+
+    public void UnloadMenu()
+    {
+        if (_menu == null)
+            return;
+
+        _menu.visualTreeAsset = null;
+        _currentMenu.UnsubscribeEvents(this);
+        _currentMenu = null;
     }
 }
