@@ -32,7 +32,7 @@ public class PlayerStateManager : NetworkBehaviour
         _cameraController = GetComponentInChildren<CameraController>();
         _currentState = playerRoamState;
         _currentState.EnterState(this);
-        GameEventManager.Instance.GetGameEventListener("exitGame").invokedEvent += ExitGame;
+        GameEventManager.Instance.GetGameEvent("ExitGame").invokedEvent += ExitGame;
     }
 
     void Update()
@@ -64,7 +64,7 @@ public class PlayerStateManager : NetworkBehaviour
 
     private void ExitGame()
     {
-        GameEventManager.Instance.GetGameEventListener("exitGame").invokedEvent -= ExitGame;
+        GameEventManager.Instance.GetGameEvent("ExitGame").invokedEvent -= ExitGame;
         _currentState.ExitState(this);
     }
 

@@ -7,8 +7,8 @@ public class GameEventManager : MonoBehaviour
     #region Vars
     private static GameEventManager _instance;
     public static GameEventManager Instance { get { return _instance; } }
-    private Dictionary<string, GameEventContainer> _gameEventContainers = new Dictionary<string, GameEventContainer>();
-    [SerializeField] private GameEventContainer[] _gameEvents;
+    private Dictionary<string, GameEvent> _gameEventContainers = new Dictionary<string, GameEvent>();
+    [SerializeField] private GameEvent[] _gameEvents;
     #endregion
 
     #region Monobehaviour
@@ -24,26 +24,21 @@ public class GameEventManager : MonoBehaviour
 
     void Start()
     {
-        foreach(GameEventContainer container in _gameEvents)
+        foreach(GameEvent gameEvent in _gameEvents)
         {
-            _gameEventContainers.Add(container.name, new GameEventContainer(container.name, container.gameEvent));
+            _gameEventContainers.Add(gameEvent.name, gameEvent);
         }
     }
     #endregion
 
-    #region Game Event Accessors
+    #region Gave Event Accessors
+
     public GameEvent GetGameEvent(string name)
     {
-        GameEventContainer container;
-        _gameEventContainers.TryGetValue(name, out container);
-        return container._gameEvent;
+        GameEvent gameEvent;
+        _gameEventContainers.TryGetValue(name, out gameEvent);
+        return gameEvent;
     }
 
-    public GameEventListener GetGameEventListener(string name)
-    {
-        GameEventContainer container;
-        _gameEventContainers.TryGetValue(name, out container);
-        return container._gameEventListener;
-    }
     #endregion
 }
