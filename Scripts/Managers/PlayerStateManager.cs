@@ -1,4 +1,3 @@
-using UnityEngine;
 using Unity.Netcode;
 
 public class PlayerStateManager : NetworkBehaviour
@@ -33,6 +32,7 @@ public class PlayerStateManager : NetworkBehaviour
         _cameraController = GetComponentInChildren<CameraController>();
         _currentState = playerRoamState;
         _currentState.EnterState(this);
+        GameEventManager.Instance.GetGameEventListener("exitGame").invokedEvent += ExitGame;
     }
 
     void Update()
@@ -60,6 +60,12 @@ public class PlayerStateManager : NetworkBehaviour
 
         _currentState = newState;
         newState.EnterState(this, menuBase);
+    }
+
+    private void ExitGame()
+    {
+        GameEventManager.Instance.GetGameEventListener("exitGame").invokedEvent -= ExitGame;
+        _currentState.ExitState(this);
     }
 
     public void SetPlayerControls(bool state)

@@ -1,11 +1,13 @@
-using UnityEngine;
 using UnityEngine.UIElements;
 
 public class PauseMenuDocumentLogic : MenuBaseDocumentLogic
 {
+    #region Vars
     private Button _resume;
     private Button _exit;
+    #endregion
 
+    #region Document Logic
     public override VisualTreeAsset GetMenu(UIManager uiManager)
     {
         return uiManager.pauseMenu;
@@ -20,11 +22,16 @@ public class PauseMenuDocumentLogic : MenuBaseDocumentLogic
 
     public override void SubscribeEvents(UIManager uiManager)
     {
+        _resume.clicked += GameEventManager.Instance.GetGameEvent("exitMenu").Invoke;
+        _exit.clicked += GameEventManager.Instance.GetGameEvent("exitGame").Invoke;
         _exit.clicked += uiManager.sceneLoader.ExitToMainMenu;
     }
 
     public override void UnsubscribeEvents(UIManager uiManager)
     {
+        _resume.clicked -= GameEventManager.Instance.GetGameEvent("exitMenu").Invoke;
+        _exit.clicked -= GameEventManager.Instance.GetGameEvent("exitGame").Invoke;
         _exit.clicked -= uiManager.sceneLoader.ExitToMainMenu;
     }
+    #endregion
 }

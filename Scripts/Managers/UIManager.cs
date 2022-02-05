@@ -18,6 +18,7 @@ public class UIManager : MonoBehaviour
     private MenuBaseDocumentLogic _mainMenuDocLogic = new MainMenuDocumentLogic();
     #endregion
 
+    #region Monobehaviour
     void Awake()
     {
         if (_instance != null && _instance != this)
@@ -34,7 +35,9 @@ public class UIManager : MonoBehaviour
         SceneManager.sceneLoaded += LoadSceneDefaultMenu;
         LoadMenu(_mainMenuDocLogic);
     }
+    #endregion
 
+    #region Menu Logic
     private void LoadSceneDefaultMenu(Scene scene, LoadSceneMode loadMode)
     {
         if (_currentMenu != null)
@@ -64,4 +67,5 @@ public class UIManager : MonoBehaviour
         _currentMenu.UnsubscribeEvents(this);
         _currentMenu = null;
     }
+    #endregion
 }

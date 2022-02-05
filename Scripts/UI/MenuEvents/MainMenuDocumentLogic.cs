@@ -1,14 +1,16 @@
-using UnityEngine;
 using UnityEngine.UIElements;
 
 public class MainMenuDocumentLogic : MenuBaseDocumentLogic
 {
+    #region Vars
     private Button _startHost;
     private Button _startClient;
+    #endregion
 
-    public override VisualTreeAsset GetMenu(UIManager uIManager)
+    #region Document Logic
+    public override VisualTreeAsset GetMenu(UIManager uiManager)
     {
-        return uIManager.mainMenu;
+        return uiManager.mainMenu;
     }
 
     public override void GetElements(UIManager uiManager, UIDocument menu)
@@ -29,4 +31,5 @@ public class MainMenuDocumentLogic : MenuBaseDocumentLogic
         _startHost.clicked -= uiManager.sceneLoader.StartAsHost;
         _startClient.clicked -= uiManager.sceneLoader.StartAsClient;
     }
+    #endregion
 }

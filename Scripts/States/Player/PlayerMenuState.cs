@@ -1,6 +1,8 @@
 using UnityEngine;
 public class PlayerMenuState : PlayerBaseState
 {
+    private PlayerStateManager _stateManager;
+
     public override void EnterState(PlayerStateManager stateManager)
     {
         //Do not use! Menu Type must be specified
@@ -10,24 +12,28 @@ public class PlayerMenuState : PlayerBaseState
 
     public override void ExitState(PlayerStateManager stateManager)
     {
-        //UIManager.Instance.SetPauseMenu(false);
+        GameEventManager.Instance.GetGameEventListener("exitMenu").invokedEvent -= ExitMenu;
     }
 
     public void EnterState(PlayerStateManager stateManager, MenuBaseDocumentLogic menuBase)
     {
+        if (!_stateManager)
+            _stateManager = stateManager;
+
         stateManager.SetPlayerControls(false);
         UIManager.Instance.LoadMenu(menuBase);
+        GameEventManager.Instance.GetGameEventListener("exitMenu").invokedEvent += ExitMenu;
     }
 
     public override void UpdateState(PlayerStateManager stateManager)
     {
         if (InputManager.Instance.PressedEscape())
-            ExitMenu(stateManager);
+            ExitMenu();
     }
 
-    private void ExitMenu(PlayerStateManager stateManager)
+    private void ExitMenu()
     {
         UIManager.Instance.UnloadMenu();
-        stateManager.SwitchState(stateManager.previousState);
+        _stateManager.SwitchState(_stateManager.previousState);
     }
 }
