@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/**
+ * Class Description Here
+ */
 public class PlayerStateManager : MonoBehaviour
 {
     #region States
@@ -14,6 +17,8 @@ public class PlayerStateManager : MonoBehaviour
 
     #region Vars
     private PlayerBaseState _currentState;
+    // why public, and not reached via accessor?
+    // then you can protect it from other code changing it
     public PlayerBaseState previousState;
     private PlayerMovement _playerMovement;
     private CameraController _cameraController;
