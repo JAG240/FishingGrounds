@@ -1,6 +1,6 @@
 using UnityEngine.UIElements;
 
-public class MainMenuDocumentLogic : MenuBaseDocumentLogic
+public class MainMenuDocumentLogic : UIBaseDocument
 {
     #region Vars
     private Button _startHost;

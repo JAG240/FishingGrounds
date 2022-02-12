@@ -1,5 +1,10 @@
 using Unity.Netcode;
 
+/**
+ * This class controls which state logic should be running depending on the current state.
+ * It also hold the previous state before switching into a menu state so the state
+ * can be preserved after exiting a menu. 
+ */
 public class PlayerStateManager : NetworkBehaviour
 {
     #region States
@@ -14,7 +19,7 @@ public class PlayerStateManager : NetworkBehaviour
 
     #region Vars
     private PlayerBaseState _currentState;
-    public PlayerBaseState previousState;
+    public PlayerBaseState previousState { get; private set; }
     private PlayerMovement _playerMovement;
     private CameraController _cameraController;
     #endregion
@@ -49,7 +54,7 @@ public class PlayerStateManager : NetworkBehaviour
         _currentState.EnterState(this);
     }
 
-    public void SwitchState(PlayerMenuState newState, MenuBaseDocumentLogic menuBase)
+    public void SwitchState(PlayerMenuState newState, UIBaseDocument menuBase)
     {
         _currentState.ExitState(this);
 

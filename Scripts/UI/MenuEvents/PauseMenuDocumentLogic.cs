@@ -1,6 +1,6 @@
 using UnityEngine.UIElements;
 
-public class PauseMenuDocumentLogic : MenuBaseDocumentLogic
+public class PauseMenuDocumentLogic : UIBaseDocument
 {
     #region Vars
     private Button _resume;

@@ -15,13 +15,13 @@ public class PlayerMenuState : PlayerBaseState
         GameEventManager.Instance.GetGameEvent("ExitMenu").invokedEvent -= ExitMenu;
     }
 
-    public void EnterState(PlayerStateManager stateManager, MenuBaseDocumentLogic menuBase)
+    public void EnterState(PlayerStateManager stateManager, UIBaseDocument menuBase)
     {
         if (!_stateManager)
             _stateManager = stateManager;
 
         stateManager.SetPlayerControls(false);
-        UIManager.Instance.LoadMenu(menuBase);
+        UIManager.Instance.LoadUIDocument(menuBase);
         GameEventManager.Instance.GetGameEvent("ExitMenu").invokedEvent += ExitMenu;
     }
 
@@ -33,7 +33,7 @@ public class PlayerMenuState : PlayerBaseState
 
     private void ExitMenu()
     {
-        UIManager.Instance.UnloadMenu();
+        UIManager.Instance.UnloadUIDocument();
         _stateManager.SwitchState(_stateManager.previousState);
     }
 }

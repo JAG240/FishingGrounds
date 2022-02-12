@@ -2,6 +2,11 @@ using UnityEngine;
 using Unity.Netcode;
 using UnityEngine.SceneManagement;
 
+/** 
+ * This class will handle all scene loading logic.
+ * It also currently handles multiplayer host and client logic.
+ * This should be moved to another class once steam API is used. 
+ */
 public class SceneLoader : NetworkBehaviour
 {
     private static SceneLoader _instance;

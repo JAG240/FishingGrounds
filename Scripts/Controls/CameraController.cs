@@ -1,6 +1,9 @@
 using UnityEngine;
 using Unity.Netcode;
 
+/**
+ * This class controls the mouse input and the direction of the players camera.
+ */
 public class CameraController : NetworkBehaviour
 {
     #region Serialized Vars

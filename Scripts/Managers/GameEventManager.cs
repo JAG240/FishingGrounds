@@ -1,7 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//This class allows global events that any other class can invoke or subscribe to 
+/**
+ * This class allows global events that any class can invoke or subscribe to. 
+ * Should only be used when an event can trigger action in many other classes 
+ * and they should not be coupled. 
+*/
 public class GameEventManager : MonoBehaviour
 {
     #region Vars
@@ -31,14 +35,12 @@ public class GameEventManager : MonoBehaviour
     }
     #endregion
 
-    #region Gave Event Accessors
-
+    #region Game Event Accessor
     public GameEvent GetGameEvent(string name)
     {
         GameEvent gameEvent;
         _gameEventContainers.TryGetValue(name, out gameEvent);
         return gameEvent;
     }
-
     #endregion
 }

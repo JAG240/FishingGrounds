@@ -2,9 +2,14 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.SceneManagement;
 
+/**
+ * This class has the only reference to the UI Document for displaying visual tree assets.
+ * It will run UIBaseDocuments logic to set the UI visible, gather elements, subscribe actions
+ * to UI elements, and unsubsribe these events when unloaded. 
+ */
 public class UIManager : MonoBehaviour
 {
-    #region Menus
+    #region UI Documents
     [SerializeField] private UIDocument _menu;
     public VisualTreeAsset mainMenu;
     public VisualTreeAsset pauseMenu;
@@ -13,9 +18,9 @@ public class UIManager : MonoBehaviour
     #region Vars
     private static UIManager _instance;
     public static UIManager Instance { get { return _instance; } }
-    [HideInInspector] public SceneLoader sceneLoader;
-    private MenuBaseDocumentLogic _currentMenu;
-    private MenuBaseDocumentLogic _mainMenuDocLogic = new MainMenuDocumentLogic();
+    [HideInInspector] public SceneLoader sceneLoader { get; private set; }
+    private UIBaseDocument _currentMenu;
+    private UIBaseDocument _mainMenuDocLogic = new MainMenuDocumentLogic();
     #endregion
 
     #region Monobehaviour
@@ -33,7 +38,7 @@ public class UIManager : MonoBehaviour
     void Start()
     {
         SceneManager.sceneLoaded += LoadSceneDefaultMenu;
-        LoadMenu(_mainMenuDocLogic);
+        LoadUIDocument(_mainMenuDocLogic);
     }
     #endregion
 
@@ -41,16 +46,16 @@ public class UIManager : MonoBehaviour
     private void LoadSceneDefaultMenu(Scene scene, LoadSceneMode loadMode)
     {
         if (_currentMenu != null)
-            UnloadMenu();
+            UnloadUIDocument();
 
         if (scene.name == "Main Menu")
-            LoadMenu(_mainMenuDocLogic);
+            LoadUIDocument(_mainMenuDocLogic);
     }
 
-    public void LoadMenu(MenuBaseDocumentLogic menuBase)
+    public void LoadUIDocument(UIBaseDocument menuBase)
     {
         if (_currentMenu != null)
-            UnloadMenu();
+            UnloadUIDocument();
 
         _menu.visualTreeAsset = menuBase.GetMenu(this);
         menuBase.GetElements(this, _menu);
@@ -58,9 +63,9 @@ public class UIManager : MonoBehaviour
         _currentMenu = menuBase;
     }
 
-    public void UnloadMenu()
+    public void UnloadUIDocument()
     {
-        if (_menu == null)
+        if (_currentMenu == null || _menu == null)
             return;
 
         _menu.visualTreeAsset = null;
