@@ -1,6 +1,9 @@
 using UnityEngine;
 using Unity.Netcode;
 
+/**
+ * This class controls the mouse input and the direction of the players camera.
+ */
 public class CameraController : NetworkBehaviour
 {
     #region Serialized Vars
@@ -22,15 +25,15 @@ public class CameraController : NetworkBehaviour
 
     void Start()
     {
-        //TO DO: read mouse sensitivity options from a settings page
-
         if (!IsLocalPlayer)
         {
             GetComponent<Camera>().enabled = false;
             enabled = false;
+            return;
         }
 
         Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     void OnEnable()

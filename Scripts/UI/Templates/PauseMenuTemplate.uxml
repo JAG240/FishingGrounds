@@ -1,0 +1,9 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="Background" style="flex-grow: 1; justify-content: center; align-items: center;">
+        <ui:VisualElement name="MenuBackground" style="height: 464px; width: 524px; background-color: rgb(255, 255, 255); justify-content: center; align-items: center; border-left-width: 15px; border-right-width: 15px; border-top-width: 15px; border-bottom-width: 15px; border-top-left-radius: 15px; border-bottom-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px;">
+            <ui:Label text="Paused" display-tooltip-when-elided="true" name="Paused" style="top: 20px; justify-content: flex-start; position: absolute; font-size: 30px; -unity-font: none;" />
+            <ui:Button text="Resume" display-tooltip-when-elided="true" name="Resume" style="height: 83px; width: 318px; font-size: 25px; border-top-left-radius: 5px; border-bottom-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px;" />
+            <ui:Button text="Exit" display-tooltip-when-elided="true" name="ExitGame" style="height: 83px; width: 318px; font-size: 25px; top: 20px; border-top-left-radius: 5px; border-bottom-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

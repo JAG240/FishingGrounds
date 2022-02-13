@@ -1,6 +1,9 @@
 using UnityEngine;
 using Unity.Netcode;
 
+/**
+ * This class controls the players character movement from the keyboard input.
+ */
 public class PlayerMovement : NetworkBehaviour
 {
     #region Seralized Vars

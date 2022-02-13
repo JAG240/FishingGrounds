@@ -15,7 +15,7 @@ public class PlayerFishingState : PlayerBaseState
     {
         if (InputManager.Instance.PressedEscape())
         {
-            stateManager.SwitchState(stateManager.playerMenuState);
+            stateManager.SwitchState(stateManager.playerMenuState, new PauseMenuDocumentLogic());
             return;
         }
 

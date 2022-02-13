@@ -2,11 +2,24 @@ using UnityEngine;
 using Unity.Netcode;
 using UnityEngine.SceneManagement;
 
+/** 
+ * This class will handle all scene loading logic.
+ * It also currently handles multiplayer host and client logic.
+ * This should be moved to another class once steam API is used. 
+ */
 public class SceneLoader : NetworkBehaviour
 {
-    private void Awake()
+    private static SceneLoader _instance;
+
+    void Awake()
     {
+        if (_instance == null)
+            _instance = this;
+        else
+            Destroy(this.gameObject);
+
         DontDestroyOnLoad(this.gameObject);
+        SceneManager.sceneLoaded += CheckHost;
     }
 
     //When starting as host only load scene
@@ -21,10 +34,16 @@ public class SceneLoader : NetworkBehaviour
         NetworkManager.Singleton.StartClient();
     }
 
-    //When a new scene is loaded, if you are the host start as host. 
-    private void OnLevelWasLoaded(int level)
+    public void ExitToMainMenu()
     {
-        if (!NetworkManager.Singleton.IsClient)
+        NetworkManager.Singleton.Shutdown();
+        SceneManager.LoadScene("Main Menu");
+    }
+
+    //When a new scene is loaded, if you are the host start as host. 
+    private void CheckHost(Scene scene, LoadSceneMode loadMode)
+    {
+        if (!NetworkManager.Singleton.IsClient && scene.name != "Main Menu")
             NetworkManager.Singleton.StartHost();
     }
 }
