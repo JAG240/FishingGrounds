@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -39,8 +40,13 @@ public class GameEventManager : MonoBehaviour
     public GameEvent GetGameEvent(string name)
     {
         GameEvent gameEvent;
-        _gameEventContainers.TryGetValue(name, out gameEvent);
-        return gameEvent;
+
+        if (_gameEventContainers.TryGetValue(name, out gameEvent))
+            return gameEvent;
+        else
+            Debug.LogException(new NullReferenceException($"cannot find game event with name {name}"));
+
+        return null;
     }
     #endregion
 }
