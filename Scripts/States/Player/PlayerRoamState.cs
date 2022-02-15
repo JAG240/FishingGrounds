@@ -15,7 +15,8 @@ public class PlayerRoamState : PlayerBaseState
     {
         if (InputManager.Instance.PressedEscape())
         {
-            stateManager.SwitchState(stateManager.playerMenuState, new PauseMenuDocumentLogic());
+            UIManager.Instance.LoadUIDocument(new PauseMenuDocumentLogic());
+            stateManager.SwitchState(stateManager.playerMenuState);
             return;
         }
 

@@ -9,7 +9,7 @@ public class PlayerStateManager : NetworkBehaviour
 {
     #region States
     public PlayerBaseState playerRoamState = new PlayerRoamState();
-    public PlayerMenuState playerMenuState = new PlayerMenuState();
+    public PlayerBaseState playerMenuState = new PlayerMenuState();
     public PlayerBaseState playerFishingState = new PlayerFishingState();
     public PlayerBaseState playerCastState = new PlayerCastState();
     public PlayerBaseState playerHookState = new PlayerHookState();
@@ -49,22 +49,12 @@ public class PlayerStateManager : NetworkBehaviour
     #region State Logic
     public void SwitchState(PlayerBaseState newState)
     {
+        if (newState.Equals(playerMenuState))
+            previousState = _currentState.Equals(playerRoamState) ? playerRoamState : playerFishingState;
+
         _currentState.ExitState(this);
         _currentState = newState;
         _currentState.EnterState(this);
-    }
-
-    public void SwitchState(PlayerMenuState newState, UIBaseDocument menuBase)
-    {
-        _currentState.ExitState(this);
-
-        if (_currentState.Equals(playerRoamState))
-            previousState = playerRoamState;
-        else
-            previousState = playerFishingState;
-
-        _currentState = newState;
-        newState.EnterState(this, menuBase);
     }
 
     private void ExitGame()
