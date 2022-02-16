@@ -8,7 +8,7 @@ public class PauseMenuDocumentLogic : UIBaseDocument
     #endregion
 
     #region Document Logic
-    public override VisualTreeAsset GetMenu(UIManager uiManager)
+    public override VisualTreeAsset GetVisualTree(UIManager uiManager)
     {
         return uiManager.pauseMenu;
     }

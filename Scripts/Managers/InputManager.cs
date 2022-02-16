@@ -64,9 +64,26 @@ public class InputManager : MonoBehaviour
         return _playerControls.Player.ToggleRod.triggered;
     }
 
-    public bool Cast()
+    //Left mouse button
+    public bool LeftAction()
     {
-        return _playerControls.Player.Cast.triggered;
+        return _playerControls.Player.LeftAction.triggered;
+    }
+
+    //Right mouse button
+    public bool RightAction()
+    {
+        return _playerControls.Player.RightAction.triggered;
+    }
+
+    public bool LeftActionHeld()
+    {
+        return _playerControls.Player.LeftAction.IsPressed();
+    }
+    
+    public bool RightActionHeld()
+    {
+        return _playerControls.Player.RightAction.IsPressed();
     }
     #endregion
 }

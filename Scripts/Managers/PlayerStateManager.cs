@@ -1,4 +1,5 @@
 using Unity.Netcode;
+using UnityEngine;
 
 /**
  * This class controls which state logic should be running depending on the current state.
@@ -20,6 +21,7 @@ public class PlayerStateManager : NetworkBehaviour
     #region Vars
     private PlayerBaseState _currentState;
     public PlayerBaseState previousState { get; private set; }
+    public GameObject fishingRod { get; private set; }
     private PlayerMovement _playerMovement;
     private CameraController _cameraController;
     #endregion
@@ -38,6 +40,7 @@ public class PlayerStateManager : NetworkBehaviour
         _currentState = playerRoamState;
         _currentState.EnterState(this);
         GameEventManager.Instance.GetGameEvent("ExitGame").invokedEvent += ExitGame;
+        fishingRod = transform.Find("fishing_rod").gameObject;
     }
 
     void Update()

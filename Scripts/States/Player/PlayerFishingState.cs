@@ -3,12 +3,14 @@ public class PlayerFishingState : PlayerBaseState
 {
     public override void EnterState(PlayerStateManager stateManager)
     {
+        stateManager.fishingRod.SetActive(true);   
+
         stateManager.SetPlayerControls(true);
     }
 
     public override void ExitState(PlayerStateManager stateManager)
     {
-
+        
     }
 
     public override void UpdateState(PlayerStateManager stateManager)
@@ -22,11 +24,12 @@ public class PlayerFishingState : PlayerBaseState
 
         if(InputManager.Instance.ToggledRod())
         {
+            stateManager.fishingRod.SetActive(false);
             stateManager.SwitchState(stateManager.playerRoamState);
             return;
         }
 
-        if(InputManager.Instance.Cast())
+        if(InputManager.Instance.LeftAction())
         {
             stateManager.SwitchState(stateManager.playerCastState);
             return;

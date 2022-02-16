@@ -8,7 +8,7 @@ using UnityEngine.UIElements;
  */
 public abstract class UIBaseDocument
 {
-    public abstract VisualTreeAsset GetMenu(UIManager uiManager);
+    public abstract VisualTreeAsset GetVisualTree(UIManager uiManager);
     public abstract void GetElements(UIManager uiManager, UIDocument menu);
     public abstract void SubscribeEvents(UIManager uiManager);
     public abstract void UnsubscribeEvents(UIManager uiManager);

@@ -57,7 +57,7 @@ public class UIManager : MonoBehaviour
         if (_currentMenu != null)
             UnloadUIDocument();
 
-        _menu.visualTreeAsset = menuBase.GetMenu(this);
+        _menu.visualTreeAsset = menuBase.GetVisualTree(this);
         menuBase.GetElements(this, _menu);
         menuBase.SubscribeEvents(this);
         _currentMenu = menuBase;

@@ -65,22 +65,33 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
+    - _GoodSize: 0.06
+    - _GoodWeight: 0.581
+    - _GreatSize: 0.03
+    - _GreatWeight: 0.231
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
+    - _OkayWeight: 0
     - _Parallax: 0.02
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
-    - _SuccessRange: 0.02
+    - _SuccessRange: 0.1
     - _SuccessZone: 0.703
-    - _SuccessZonePos: 0.505
-    - _SuccessZones: 0
+    - _SuccessZonePos: 0.646
+    - _SuccessZones: 2
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _FillColor: {r: 0.4009434, g: 1, b: 0.5280026, a: 0}
-    - _SuccessZoneColor: {r: 1, g: 0, b: 0, a: 0}
+    - _FillColor: {r: 0.8490566, g: 0.41251338, b: 0.41251338, a: 0}
+    - _GoodColor: {r: 0.49605724, g: 0.9339623, b: 0.40970984, a: 0}
+    - _GoodSuccessZoneColor: {r: 0.27654147, g: 1, b: 0, a: 0}
+    - _GreatColor: {r: 0.38203096, g: 0.49842912, b: 0.9528302, a: 0}
+    - _GreatSuccessZoneColor: {r: 0, g: 0.15721345, b: 1, a: 0}
+    - _OkayColor: {r: 0.9917684, g: 1, b: 0.5801887, a: 0}
+    - _OkaySuccessZoneColor: {r: 0.9254902, g: 0.765263, b: 0.11764706, a: 0}
+    - _SuccessZoneColor: {r: 0.013375282, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []

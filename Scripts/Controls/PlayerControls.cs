@@ -73,9 +73,18 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Cast"",
+                    ""name"": ""LeftAction"",
                     ""type"": ""Button"",
                     ""id"": ""e4d2dda3-c932-49f6-a11f-76ccad728b46"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""RightAction"",
+                    ""type"": ""Button"",
+                    ""id"": ""b94e24e4-d021-4f87-87bd-4860595d2bfd"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -189,7 +198,18 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Cast"",
+                    ""action"": ""LeftAction"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""51c1652c-5151-4a97-8e94-7f7e1787e921"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RightAction"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -205,7 +225,8 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
         m_Player_Escape = m_Player.FindAction("Escape", throwIfNotFound: true);
         m_Player_ToggleRod = m_Player.FindAction("ToggleRod", throwIfNotFound: true);
-        m_Player_Cast = m_Player.FindAction("Cast", throwIfNotFound: true);
+        m_Player_LeftAction = m_Player.FindAction("LeftAction", throwIfNotFound: true);
+        m_Player_RightAction = m_Player.FindAction("RightAction", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -270,7 +291,8 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Look;
     private readonly InputAction m_Player_Escape;
     private readonly InputAction m_Player_ToggleRod;
-    private readonly InputAction m_Player_Cast;
+    private readonly InputAction m_Player_LeftAction;
+    private readonly InputAction m_Player_RightAction;
     public struct PlayerActions
     {
         private @PlayerControls m_Wrapper;
@@ -280,7 +302,8 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         public InputAction @Look => m_Wrapper.m_Player_Look;
         public InputAction @Escape => m_Wrapper.m_Player_Escape;
         public InputAction @ToggleRod => m_Wrapper.m_Player_ToggleRod;
-        public InputAction @Cast => m_Wrapper.m_Player_Cast;
+        public InputAction @LeftAction => m_Wrapper.m_Player_LeftAction;
+        public InputAction @RightAction => m_Wrapper.m_Player_RightAction;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -305,9 +328,12 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @ToggleRod.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnToggleRod;
                 @ToggleRod.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnToggleRod;
                 @ToggleRod.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnToggleRod;
-                @Cast.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCast;
-                @Cast.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCast;
-                @Cast.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCast;
+                @LeftAction.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLeftAction;
+                @LeftAction.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLeftAction;
+                @LeftAction.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLeftAction;
+                @RightAction.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRightAction;
+                @RightAction.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRightAction;
+                @RightAction.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRightAction;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -327,9 +353,12 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @ToggleRod.started += instance.OnToggleRod;
                 @ToggleRod.performed += instance.OnToggleRod;
                 @ToggleRod.canceled += instance.OnToggleRod;
-                @Cast.started += instance.OnCast;
-                @Cast.performed += instance.OnCast;
-                @Cast.canceled += instance.OnCast;
+                @LeftAction.started += instance.OnLeftAction;
+                @LeftAction.performed += instance.OnLeftAction;
+                @LeftAction.canceled += instance.OnLeftAction;
+                @RightAction.started += instance.OnRightAction;
+                @RightAction.performed += instance.OnRightAction;
+                @RightAction.canceled += instance.OnRightAction;
             }
         }
     }
@@ -341,6 +370,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         void OnLook(InputAction.CallbackContext context);
         void OnEscape(InputAction.CallbackContext context);
         void OnToggleRod(InputAction.CallbackContext context);
-        void OnCast(InputAction.CallbackContext context);
+        void OnLeftAction(InputAction.CallbackContext context);
+        void OnRightAction(InputAction.CallbackContext context);
     }
 }

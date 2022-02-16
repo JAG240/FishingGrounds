@@ -4,14 +4,25 @@ Shader "Unlit/CastBar"
     {
         _BarFill("BarFill", Range(0,1)) = 0
         _SuccessZonePos("SuccessZonePos", Range(0.0,1.0)) = 0
-        _SuccessRange("SuccessRange", float) = 0
-        _SuccessZones("SucccessZones", Range(0,4)) = 0
+        _SuccessRange("SuccessRange", Range(0.0, 0.4)) = 0
         _FillColor("FillColor", Color) = (0,0,0,0)
-        _SuccessZoneColor("SuccessZoneColor", Color) = (0,0,0,0)
+
+        _GreatSize("GreatSize", Range(0.0, 1.0)) = 0.2
+        _GoodSize("Goodsize", Range(0.0 ,1.0)) = 0.3
+
+        _GreatColor("GreatSuccessZoneColor", Color) = (0,0,0,0)
+        _GoodColor("GoodSuccessZoneColor", Color) = (0,0,0,0)
+        _OkayColor("OkaySuccessZoneColor", Color) = (0,0,0,0)
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" }
+        Tags   
+        { 
+            "RenderType"="Opaque"
+            "Queue"="Overlay"
+        }
+
+        ZTest Always
 
         Pass
         {
@@ -36,19 +47,21 @@ Shader "Unlit/CastBar"
             float _BarFill;
             float _SuccessZonePos;
             float _SuccessRange;
+            float _GreatSize;
+            float _GoodSize;
             float4 _FillColor;
-            float4 _SuccessZoneColor;
-            int _SuccessZones;
+            float4 _GreatColor;
+            float4 _GoodColor;
+            float4 _OkayColor;
 
-            float InvLerp(float iMin, float iMax, float v)
+            float4 GetZoneColor(float uvy)
             {
-                return (v - iMin) / (iMax - iMin);
-            }
-
-            float Remap(float iMin, float iMax, float oMin, float oMax, float v)
-            {
-                float t = InvLerp(iMin, iMax, v);
-                return lerp(oMin, oMax, t);
+                if (uvy + _GreatSize > _SuccessZonePos && uvy - _GreatSize < _SuccessZonePos)
+                    return _GreatColor;
+                else if (uvy + _GoodSize > _SuccessZonePos && uvy - _GoodSize < _SuccessZonePos)
+                    return _GoodColor;
+                else
+                    return _OkayColor;
             }
 
             v2f vert (appdata v)
@@ -62,10 +75,9 @@ Shader "Unlit/CastBar"
             fixed4 frag(v2f i) : SV_Target
             {
                 float value = i.uv.y > _BarFill;
-                clip(value - 0.0001);
 
                 if (i.uv.y + _SuccessRange > _SuccessZonePos && i.uv.y - _SuccessRange < _SuccessZonePos && value)
-                    return _SuccessZoneColor;
+                    return GetZoneColor(i.uv.y);
 
                 return float4(value.xxx * _FillColor, 1);
             }
