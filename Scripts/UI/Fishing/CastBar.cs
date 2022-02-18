@@ -15,13 +15,38 @@ public class CastBar : MonoBehaviour
 {
     private Camera _cam;
     private Material _mat;
-    [SerializeField] float _camDistance;
-    [SerializeField] float _camHeight;
+    [SerializeField] private float _camDistance;
+    [SerializeField] private float _camHeight;
+    private Coroutine _barFillCoroutine;
 
-    private float _greatSize;
-    private float _goodSize;
-    private float _successRange;
-    private float _successPos;
+    #region Shader Accessors and Mutators
+    public float barFill
+    {
+        get { return 1 - Mathf.Clamp01(_mat.GetFloat("_BarFill")); }
+        private set { _mat.SetFloat("_BarFill", value); }
+    }
+    private float _greatSize
+    {
+        get { return _mat.GetFloat("_GreatSize"); }
+        set { _mat.SetFloat("_GreatSize", value); }
+    }
+    private float _goodSize
+    {
+        get { return _mat.GetFloat("_GoodSize"); }
+        set { _mat.SetFloat("_GoodSize", value); }
+    }
+    private float _successRange
+    {
+        get { return _mat.GetFloat("_SuccessRange"); }
+        set { _mat.SetFloat("_SuccessRange", value); }
+    }
+    private float _successPos
+    {
+        get { return _mat.GetFloat("_SuccessZonePos"); }
+        set { _mat.SetFloat("_SuccessZonePos", value); }
+    }
+    #endregion
+
 
     void Awake()
     {
@@ -37,35 +62,48 @@ public class CastBar : MonoBehaviour
 
     public void ClearBar()
     {
-        _mat.SetFloat("_BarFill", 1);
+        barFill = 1;
+        _successRange = 0;
     }
 
-    private void AssignWeights(float greatWeight, float goodWeight)
+    public void FillCastMeter(bool state)
     {
-        _greatSize = _successRange * greatWeight;
-        _goodSize = _successRange * goodWeight + _greatSize;
-        _mat.SetFloat("_GreatSize", _greatSize);
-        _mat.SetFloat("_GoodSize", _goodSize);
+        if (state)
+           _barFillCoroutine = StartCoroutine(FillCastMeter());
+        else
+            StopCoroutine(_barFillCoroutine);
     }
 
-    private void AssignSuccessRange(float range)
+    public void UnfillCastMeter(bool state)
+    {
+        if (state)
+            _barFillCoroutine = StartCoroutine(UnfillCastMeter());
+        else
+            StopCoroutine(_barFillCoroutine);
+    }
+
+    public void AssignSuccessVars(float range, float greatWeight, float goodWeight)
     {
         _successRange = range;
-        _mat.SetFloat("_SuccessRange", range);
-    }
+        _greatSize = _successRange * greatWeight;
+        _goodSize = _successRange * goodWeight + _greatSize;
 
-    private void SetSuccessPos()
-    {
-        float pos = Random.Range(_successRange, 1 - _successRange);
+        if(_successRange >= barFill)
+        {
+            _successPos = barFill / 2f;
+            return;
+        }
+
+        //increase (_successRange * num) num to make the success zone farther from the fill at min
+        float pos = Random.Range(1 -_successRange, 1 - (barFill -(_successRange*3)));
         _successPos = pos;
-        _mat.SetFloat("_SuccessZonePos", pos);
     }
 
-    public float GetResults(float pos)
+    public float GetResults()
     {
         // pos - successPos less than the range to be in the success zone at all
         //no bigger than pos + size for in that zone 
-
+        float pos = Mathf.Abs(barFill - 1);
         float result = Mathf.Abs(pos - _successPos);
 
         if (result > _successRange)
@@ -77,5 +115,33 @@ public class CastBar : MonoBehaviour
             return 1f;
         else
             return 0.8f;
+    }
+
+    private IEnumerator FillCastMeter()
+    {
+        float barFill = 1;
+        float fillSpeed;
+
+        while (barFill > 0)
+        {
+            fillSpeed = Mathf.Lerp(0.05f, 0.2f, barFill);
+            barFill -= fillSpeed * Time.fixedDeltaTime;
+            this.barFill = barFill;
+            yield return null;
+        }
+    }
+
+    private IEnumerator UnfillCastMeter()
+    {
+        float barFill = Mathf.Abs(this.barFill - 1);
+        float unfillSpeed;
+
+        while (barFill < 1)
+        {
+            unfillSpeed = Mathf.Lerp(0.2f, 0.05f, barFill);
+            barFill += unfillSpeed * Time.fixedDeltaTime;
+            this.barFill = barFill;
+            yield return null;
+        }
     }
 }

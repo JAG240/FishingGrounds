@@ -377,6 +377,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3272246295126836526}
     m_Modifications:
+    - target: {fileID: -8155962434173254966, guid: 9871afb9e684aaa469f36c78ba0bba7c, type: 3}
+      propertyPath: _fillTimer
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 104529003953780945, guid: 9871afb9e684aaa469f36c78ba0bba7c, type: 3}
       propertyPath: m_Name
       value: CastBar

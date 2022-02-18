@@ -39,21 +39,33 @@ public class PlayerCastState : PlayerBaseState
             return;
         }
 
+
         if(!InputManager.Instance.LeftActionHeld() && _casting)
         {
-            //Get results
+            //results here is the cast multiplier
+            _castBar.UnfillCastMeter(false);
+            _casting = false;
+            Debug.Log($"Results: {_castBar.GetResults()}");
+
+            return;
         }
 
         if(InputManager.Instance.RightAction() && !_casting)
         {
-            //Start to fill bar
+            _castBar.FillCastMeter(true);
             _casting = true;
         }
 
-        if(!InputManager.Instance.RightActionHeld() && _casting)
+        if(InputManager.Instance.RightActionRelease() && _casting)
         {
-            //Stop filling bar
-            //Get results
+            //Max fill will determine how much max cast is available
+            _castBar.FillCastMeter(false);
+            Debug.Log($"Max fill: {_castBar.barFill}");
+
+            //These values are hard coded for testing but, will be determined from equipment in later builds
+            _castBar.AssignSuccessVars(0.1f, 0.3f, 0.3f);
+
+            _castBar.UnfillCastMeter(true);
         }
 
 

@@ -75,6 +75,16 @@ public class InputManager : MonoBehaviour
     {
         return _playerControls.Player.RightAction.triggered;
     }
+    public bool LeftActionRelease()
+    {
+        return _playerControls.Player.LeftAction.WasReleasedThisFrame();
+    }
+
+    public bool RightActionRelease()
+    {
+        return _playerControls.Player.RightAction.WasReleasedThisFrame();
+    }
+
 
     public bool LeftActionHeld()
     {
