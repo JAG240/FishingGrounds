@@ -22,6 +22,7 @@ public class PlayerStateManager : NetworkBehaviour
     private PlayerBaseState _currentState;
     public PlayerBaseState previousState { get; private set; }
     public GameObject fishingRod { get; private set; }
+    public GameObject bobber { get; private set; }
     private PlayerMovement _playerMovement;
     private CameraController _cameraController;
     #endregion
@@ -41,10 +42,19 @@ public class PlayerStateManager : NetworkBehaviour
         _currentState.EnterState(this);
         GameEventManager.Instance.GetGameEvent("ExitGame").invokedEvent += ExitGame;
         fishingRod = transform.Find("fishing_rod").gameObject;
+        bobber = transform.Find("bobber").gameObject;
     }
 
     void Update()
     {
+        if (InputManager.Instance.PressedEscape() && !_currentState.Equals(playerMenuState))
+        {
+            UIManager.Instance.LoadUIDocument(new PauseMenuDocumentLogic());
+            previousState = _currentState.Equals(playerRoamState) ? playerRoamState : playerFishingState;
+            SwitchState(playerMenuState);
+            return;
+        }
+
         _currentState.UpdateState(this);
     }
     #endregion
@@ -52,9 +62,6 @@ public class PlayerStateManager : NetworkBehaviour
     #region State Logic
     public void SwitchState(PlayerBaseState newState)
     {
-        if (newState.Equals(playerMenuState))
-            previousState = _currentState.Equals(playerRoamState) ? playerRoamState : playerFishingState;
-
         _currentState.ExitState(this);
         _currentState = newState;
         _currentState.EnterState(this);

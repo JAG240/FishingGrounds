@@ -13,11 +13,22 @@ using UnityEngine;
 
 public class CastBar : MonoBehaviour
 {
+    #region Private vars
     private Camera _cam;
     private Material _mat;
+    private Coroutine _barFillCoroutine;
+    #endregion
+
+    #region Serialized Vars
     [SerializeField] private float _camDistance;
     [SerializeField] private float _camHeight;
-    private Coroutine _barFillCoroutine;
+    [SerializeField] private float _minBarFillSpeed = 0.05f;
+    [SerializeField] private float _maxBarFillSpeed = 0.2f;
+    [SerializeField] private float _closestRange = 3.0f;
+    [SerializeField] private float _okayMultiplier = 0.8f;
+    [SerializeField] private float _goodMultiplier = 1.0f;
+    [SerializeField] private float _greatMultiplier = 1.2f;
+    #endregion
 
     #region Shader Accessors and Mutators
     public float barFill
@@ -47,7 +58,7 @@ public class CastBar : MonoBehaviour
     }
     #endregion
 
-
+    #region Monobehaviors
     void Awake()
     {
         _cam = transform.root.GetChild(0).GetComponent<Camera>();
@@ -56,10 +67,13 @@ public class CastBar : MonoBehaviour
 
     private void OnEnable()
     {
+        //positions the bar on the screen in world position 
         transform.position = _cam.ScreenToWorldPoint(new Vector3(Screen.width / 2, Screen.height / _camHeight, _camDistance));
         transform.rotation = Quaternion.LookRotation(transform.position - transform.root.position);
     }
+    #endregion
 
+    #region Cast Bar Logic
     public void ClearBar()
     {
         barFill = 1;
@@ -88,33 +102,35 @@ public class CastBar : MonoBehaviour
         _greatSize = _successRange * greatWeight;
         _goodSize = _successRange * goodWeight + _greatSize;
 
+        //if the bar is not filled to the success range then set to middle of the bar
         if(_successRange >= barFill)
         {
             _successPos = barFill / 2f;
             return;
         }
 
-        //increase (_successRange * num) num to make the success zone farther from the fill at min
-        float pos = Random.Range(1 -_successRange, 1 - (barFill -(_successRange*3)));
+        //randomly assigns success zone from the top of the bar to the bottom of the bar
+        //taking into account the size of the success range and clostest possible range
+        float pos = Random.Range(1 -_successRange, 1 - (barFill -(_successRange * _closestRange)));
         _successPos = pos;
     }
 
-    public float GetResults()
+    public float GetMultiplier()
     {
-        // pos - successPos less than the range to be in the success zone at all
-        //no bigger than pos + size for in that zone 
         float pos = Mathf.Abs(barFill - 1);
         float result = Mathf.Abs(pos - _successPos);
 
+        //If not in succes range at all failed skill check
         if (result > _successRange)
             return 0;
 
+        //Determines which multiplier was achieved
         if (_greatSize > 0 && result <= _greatSize)
-            return 1.5f;
-        else if (result <= _goodSize)
-            return 1f;
+            return _greatMultiplier;
+        else if (_goodSize > 0 && result <= _goodSize)
+            return _goodMultiplier;
         else
-            return 0.8f;
+            return _okayMultiplier;
     }
 
     private IEnumerator FillCastMeter()
@@ -124,7 +140,7 @@ public class CastBar : MonoBehaviour
 
         while (barFill > 0)
         {
-            fillSpeed = Mathf.Lerp(0.05f, 0.2f, barFill);
+            fillSpeed = Mathf.Lerp(_minBarFillSpeed, _maxBarFillSpeed, barFill);
             barFill -= fillSpeed * Time.fixedDeltaTime;
             this.barFill = barFill;
             yield return null;
@@ -138,10 +154,11 @@ public class CastBar : MonoBehaviour
 
         while (barFill < 1)
         {
-            unfillSpeed = Mathf.Lerp(0.2f, 0.05f, barFill);
+            unfillSpeed = Mathf.Lerp(_maxBarFillSpeed, _minBarFillSpeed, barFill);
             barFill += unfillSpeed * Time.fixedDeltaTime;
             this.barFill = barFill;
             yield return null;
         }
     }
+    #endregion
 }

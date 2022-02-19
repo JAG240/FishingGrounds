@@ -3,8 +3,8 @@ public class PlayerFishingState : PlayerBaseState
 {
     public override void EnterState(PlayerStateManager stateManager)
     {
-        stateManager.fishingRod.SetActive(true);   
-
+        stateManager.fishingRod.SetActive(true);
+        stateManager.bobber.SetActive(true);
         stateManager.SetPlayerControls(true);
     }
 
@@ -15,16 +15,10 @@ public class PlayerFishingState : PlayerBaseState
 
     public override void UpdateState(PlayerStateManager stateManager)
     {
-        if (InputManager.Instance.PressedEscape())
-        {
-            UIManager.Instance.LoadUIDocument(new PauseMenuDocumentLogic());
-            stateManager.SwitchState(stateManager.playerMenuState);
-            return;
-        }
-
         if(InputManager.Instance.ToggledRod())
         {
             stateManager.fishingRod.SetActive(false);
+            stateManager.bobber.SetActive(false);
             stateManager.SwitchState(stateManager.playerRoamState);
             return;
         }

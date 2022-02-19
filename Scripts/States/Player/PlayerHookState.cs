@@ -3,7 +3,7 @@ public class PlayerHookState : PlayerBaseState
 {
     public override void EnterState(PlayerStateManager stateManager)
     {
-
+        Debug.Log("Entered hook state");
     }
 
     public override void ExitState(PlayerStateManager stateManager)

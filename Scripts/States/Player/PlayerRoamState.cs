@@ -13,13 +13,6 @@ public class PlayerRoamState : PlayerBaseState
 
     public override void UpdateState(PlayerStateManager stateManager)
     {
-        if (InputManager.Instance.PressedEscape())
-        {
-            UIManager.Instance.LoadUIDocument(new PauseMenuDocumentLogic());
-            stateManager.SwitchState(stateManager.playerMenuState);
-            return;
-        }
-
         if (InputManager.Instance.ToggledRod())
         {
             stateManager.SwitchState(stateManager.playerFishingState);
