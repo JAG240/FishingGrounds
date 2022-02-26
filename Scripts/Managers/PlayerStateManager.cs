@@ -20,11 +20,11 @@ public class PlayerStateManager : NetworkBehaviour
 
     #region Vars
     private PlayerBaseState _currentState;
+    private PlayerMovement _playerMovement;
+    private CameraController _cameraController;
     public PlayerBaseState previousState { get; private set; }
     public GameObject fishingRod { get; private set; }
     public Bobber bobber { get; private set; }
-    private PlayerMovement _playerMovement;
-    private CameraController _cameraController;
     #endregion
 
     #region Monobehaviour
