@@ -3,7 +3,6 @@ public class PlayerCastState : PlayerBaseState
 {
     private GameObject _castBarObj;
     private CastBar _castBar;
-    private Bobber _bobber;
     private bool _casting = false;
     private float _maxBarFill;
     private PlayerStateManager _stateManager;
@@ -16,9 +15,6 @@ public class PlayerCastState : PlayerBaseState
             _castBar = _castBarObj.GetComponent<CastBar>();
         }
 
-        if(!_bobber)
-            _bobber = stateManager.bobber.GetComponent<Bobber>();
-
         if (!_stateManager)
             _stateManager = stateManager;
 
@@ -27,19 +23,27 @@ public class PlayerCastState : PlayerBaseState
         Cursor.visible = false;
         _castBar.ClearBar();
 
-        _bobber.exitCast += ExitCastSuccessfully;
-        _bobber.Return();
+        stateManager.bobber.exitCast += ExitCastSuccessfully;
+        stateManager.bobber.Return();
     }
 
     public override void ExitState(PlayerStateManager stateManager)
     {
         _castBarObj.SetActive(false);
-        _bobber.exitCast -= ExitCastSuccessfully;
+        stateManager.bobber.exitCast -= ExitCastSuccessfully;
     }
 
     public override void UpdateState(PlayerStateManager stateManager)
     {
-        if(!InputManager.Instance.LeftActionHeld() && !_casting)
+        if (InputManager.Instance.PressedEscape())
+        {
+            _casting = false;
+            UIManager.Instance.LoadUIDocument(new PauseMenuDocumentLogic());
+            stateManager.SwitchState(stateManager.playerMenuState);
+            return;
+        }
+
+        if (!InputManager.Instance.LeftActionHeld() && !_casting)
         {
             stateManager.SwitchState(stateManager.playerFishingState);
             return;
@@ -52,7 +56,7 @@ public class PlayerCastState : PlayerBaseState
             _castBar.UnfillCastMeter(false);
 
             //hard coded 15 will be replaced with equipment rating
-            _bobber.Cast(stateManager.transform, results * 15);
+            stateManager.bobber.Cast(stateManager.transform, results * 15);
             return;
         }
 

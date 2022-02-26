@@ -8,8 +8,12 @@ public class PlayerMenuState : PlayerBaseState
         if (!_stateManager)
             _stateManager = stateManager;
 
+        if(stateManager.bobber.isActiveAndEnabled)
+            stateManager.bobber.Return();
+
         stateManager.SetPlayerControls(false);
         GameEventManager.Instance.GetGameEvent("ExitMenu").invokedEvent += ExitMenu;
+        Cursor.visible = true;
     }
 
     public override void ExitState(PlayerStateManager stateManager)
@@ -20,7 +24,7 @@ public class PlayerMenuState : PlayerBaseState
     public override void UpdateState(PlayerStateManager stateManager)
     {
         if (InputManager.Instance.PressedEscape())
-            ExitMenu();
+            GameEventManager.Instance.GetGameEvent("ExitMenu").InvokeEvent();
     }
 
     private void ExitMenu()

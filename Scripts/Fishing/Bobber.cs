@@ -23,10 +23,8 @@ public class Bobber : MonoBehaviour
     {
         if (collision.transform.tag != "Water")
         {
-            _body.useGravity = false;
-            _body.velocity = Vector3.zero;
-            exitCast?.Invoke(false);
             Return();
+            exitCast?.Invoke(false);
         }
         else
         {
@@ -41,10 +39,8 @@ public class Bobber : MonoBehaviour
     {
         if (other.transform.tag != "Water")
         {
-            _body.useGravity = false;
-            _body.velocity = Vector3.zero;
-            exitCast?.Invoke(false);
             Return();
+            exitCast?.Invoke(false);
         }
         else
         {
@@ -66,6 +62,8 @@ public class Bobber : MonoBehaviour
 
     public void Return()
     {
+        _body.useGravity = false;
+        _body.velocity = Vector3.zero;
         transform.localPosition = _localPosition;
         transform.localRotation = _localRotation;
     }
