@@ -35,8 +35,6 @@ public class RodControls : MonoBehaviour
 
     public void RotateCamera(Transform lookTarget)
     {
-        //_eyes.LookAt(target, Vector3.up);
-
         Quaternion targetRot = Quaternion.LookRotation(lookTarget.position - transform.position);
         StartCoroutine(Look(targetRot));
     }

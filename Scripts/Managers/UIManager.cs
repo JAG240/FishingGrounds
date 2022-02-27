@@ -10,7 +10,7 @@ using UnityEngine.SceneManagement;
 public class UIManager : MonoBehaviour
 {
     #region UI Documents
-    [SerializeField] private UIDocument _menu;
+    private UIDocument _menu;
     public VisualTreeAsset mainMenu;
     public VisualTreeAsset pauseMenu;
     #endregion
@@ -33,6 +33,7 @@ public class UIManager : MonoBehaviour
 
         DontDestroyOnLoad(this.gameObject);
         sceneLoader = GameObject.Find("SceneManager").GetComponent<SceneLoader>();
+        _menu = GetComponent<UIDocument>();
     }
 
     void Start()

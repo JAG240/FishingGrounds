@@ -26,15 +26,15 @@ public class FishingLine : MonoBehaviour
 
     private void UpdateLine()
     {
-        int segments = Mathf.Max(Mathf.RoundToInt(Vector3.Distance(_rodTip.position, _bobber.position)) * 4, 2);
+        int positions = Mathf.Max(Mathf.RoundToInt(Vector3.Distance(_rodTip.position, _bobber.position)) * 4, 2);
 
-        if(_lineRenderer.positionCount != segments)
-                _lineRenderer.positionCount = segments;
+        if(_lineRenderer.positionCount != positions)
+                _lineRenderer.positionCount = positions;
 
-        for(int x = 0; x < segments; x++)
+        for(int x = 0; x < positions; x++)
         {
             Vector3 pos;
-            float interpolator = (float)x / segments;
+            float interpolator = (float)x / (positions - 1);
             pos.x = Mathf.Lerp(_rodTip.position.x, _bobber.position.x, interpolator);
             pos.z = Mathf.Lerp(_rodTip.position.z, _bobber.position.z, interpolator);
             pos.y = Mathf.Lerp(_rodTip.position.y, _bobber.position.y, Mathf.Pow(interpolator, Mathf.Pow(interpolator, _sag * interpolator)));
