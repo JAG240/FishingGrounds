@@ -14,6 +14,7 @@ public class PlayerMenuState : PlayerBaseState
         stateManager.SetPlayerControls(false);
         GameEventManager.Instance.GetGameEvent("ExitMenu").invokedEvent += ExitMenu;
         Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
     }
 
     public override void ExitState(PlayerStateManager stateManager)

@@ -20,8 +20,10 @@ public class PlayerCastState : PlayerBaseState
 
         stateManager.SetPlayerControls(false);
         _castBarObj.SetActive(true);
-        Cursor.visible = false;
         _castBar.ClearBar();
+
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
 
         stateManager.bobber.exitCast += ExitCastSuccessfully;
         stateManager.bobber.Return();
