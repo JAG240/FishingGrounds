@@ -45,13 +45,13 @@ public class PlayerCastState : PlayerBaseState
             return;
         }
 
-        if (!InputManager.Instance.LeftActionHeld() && !_casting)
+        if (!InputManager.Instance.RightActionHeld() && !_casting)
         {
             stateManager.SwitchState(stateManager.playerFishingState);
             return;
         }
 
-        if(InputManager.Instance.LeftActionRelease() && _casting)
+        if(InputManager.Instance.RightActionRelease() && _casting)
         {
             //results here is the cast multiplier
             float results = _maxBarFill * _castBar.GetMultiplier();
@@ -62,13 +62,13 @@ public class PlayerCastState : PlayerBaseState
             return;
         }
 
-        if(InputManager.Instance.RightAction() && !_casting)
+        if(InputManager.Instance.LeftAction() && !_casting)
         {
             _castBar.FillCastMeter(true);
             _casting = true;
         }
 
-        if(InputManager.Instance.RightActionRelease() && _casting)
+        if(InputManager.Instance.LeftActionRelease() && _casting)
         {
             _castBar.FillCastMeter(false);
             _maxBarFill = _castBar.barFill;

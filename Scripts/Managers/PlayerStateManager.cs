@@ -22,6 +22,7 @@ public class PlayerStateManager : NetworkBehaviour
     private PlayerBaseState _currentState;
     private PlayerMovement _playerMovement;
     private CameraController _cameraController;
+    public FishManager fishManager { get; private set; }
     public PlayerBaseState previousState { get; private set; }
     public GameObject fishingRod { get; private set; }
     public Bobber bobber { get; private set; }
@@ -40,7 +41,9 @@ public class PlayerStateManager : NetworkBehaviour
         _cameraController = GetComponentInChildren<CameraController>();
         _currentState = playerRoamState;
         _currentState.EnterState(this);
-        GameEventManager.Instance.GetGameEvent("ExitGame").invokedEvent += ExitGame;
+
+        fishManager = GameObject.Find("FishManager").GetComponent<FishManager>();
+        GameEventManager.Instance.exitGame.invokedEvent += ExitGame;
         fishingRod = transform.Find("fishing_rod").gameObject;
         bobber = transform.Find("bobber").GetComponent<Bobber>();
     }
@@ -64,7 +67,7 @@ public class PlayerStateManager : NetworkBehaviour
 
     private void ExitGame()
     {
-        GameEventManager.Instance.GetGameEvent("ExitGame").invokedEvent -= ExitGame;
+        GameEventManager.Instance.exitGame.invokedEvent -= ExitGame;
         _currentState.ExitState(this);
     }
 

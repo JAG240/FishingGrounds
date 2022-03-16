@@ -1,4 +1,5 @@
 using UnityEngine;
+using Unity.Netcode;
 
 /**
  * This abstract class will ensure that all player states have the ability
@@ -8,5 +9,6 @@ public abstract class PlayerBaseState
 {
     public abstract void EnterState(PlayerStateManager stateManager);
     public abstract void ExitState(PlayerStateManager stateManager);
+
     public abstract void UpdateState(PlayerStateManager stateManager);
 }

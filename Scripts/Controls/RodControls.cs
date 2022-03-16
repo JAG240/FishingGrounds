@@ -11,9 +11,13 @@ public class RodControls : MonoBehaviour
     #region Searlized Vars
     [SerializeField] private float _lookTimer = 1.0f;
     [SerializeField] private float _controlSpeed = 2.0f;
+    [SerializeField] private float _hookTimer = 1.0f;
+    [SerializeField] private float _hookStrength = 50.0f; //50 is a good starting point, increase this value to make the player pull hard on the mouse to hook
+    [SerializeField] private float _reelSpeed = 2f;
     #endregion
 
     #region Vars
+    public Fish hookedFish;
     private InputManager _inputManager;
     private Vector3 _activePos;
     private Vector3 _inactivePos;
@@ -21,6 +25,7 @@ public class RodControls : MonoBehaviour
     private bool _enableRodControls = false;
     private Vector3 _localRot;
     private Vector3 _localStartRot;
+    [SerializeField] private Bobber _bobber;
     #endregion
 
     #region Monobehavior
@@ -32,6 +37,7 @@ public class RodControls : MonoBehaviour
         _eyes = transform.parent.Find("Eyes");
         _inputManager = InputManager.Instance;
         _localStartRot = transform.localRotation.eulerAngles;
+        _bobber = transform.parent.Find("bobber").GetComponent<Bobber>();
     }
 
     void OnEnable()
@@ -39,6 +45,7 @@ public class RodControls : MonoBehaviour
         transform.localPosition = _activePos;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        GameEventManager.Instance.fishBite.invokedEvent += StartBiteTimer;
     }
 
     void OnDisable()
@@ -47,12 +54,17 @@ public class RodControls : MonoBehaviour
         StopAllCoroutines();
         _enableRodControls = false;
         transform.localRotation = Quaternion.Euler(_localStartRot);
+        GameEventManager.Instance.fishBite.invokedEvent -= StartBiteTimer;
     }
 
     void Update()
     {
-        if (_enableRodControls)
-            ControlRod();
+        if (!_enableRodControls)
+            return;
+        
+        ControlRod();
+        ControlReel();
+        
     }
     #endregion
 
@@ -66,6 +78,23 @@ public class RodControls : MonoBehaviour
         float verticalValue = Mathf.Clamp(_localRot.y + (mouseInput.x * Time.deltaTime * _controlSpeed), 120f, 240f);
 
         transform.localRotation = Quaternion.Euler(horizontalValue, verticalValue, _localRot.z);
+    }
+
+    private void ControlReel()
+    {
+        if(InputManager.Instance.LeftActionHeld())
+        {
+            if(!hookedFish)
+            {
+                Vector3 direction = _bobber.transform.position - transform.position;
+                direction.Normalize();
+                direction.y = 0;
+
+                _bobber.transform.position -= direction * Time.deltaTime * _reelSpeed;
+            }
+
+            //reel in the fish
+        }
     }
 
     public void RotateCamera(Transform lookTarget)
@@ -88,6 +117,33 @@ public class RodControls : MonoBehaviour
         _eyes.transform.rotation = target;
         _enableRodControls = true;
         yield return null;
+    }
+
+    private void StartBiteTimer()
+    {
+        StartCoroutine(CheckHook());
+    }
+
+    //y need to be negative for the rod to move up and abs of x together to make this work 
+    private IEnumerator CheckHook()
+    {
+        float timer = 0.0f;
+        while(timer < _hookTimer)
+        {
+            Vector2 mouseDelta = InputManager.Instance.GetMouseDelta();
+            timer += Time.deltaTime;
+
+            if(mouseDelta.y < 0 && Mathf.Abs(mouseDelta.y) + Mathf.Abs(mouseDelta.x) > _hookStrength)
+            {
+                GameEventManager.Instance.fishHooked.InvokeEvent();
+                break;
+            }
+
+            yield return null;
+        }
+
+        //for later to make the player lose bait on bites put logic here
+        //if(timer >= _hookTimer)
     }
     #endregion
 }

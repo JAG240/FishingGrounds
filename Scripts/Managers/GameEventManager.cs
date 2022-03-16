@@ -12,8 +12,20 @@ public class GameEventManager : MonoBehaviour
     #region Vars
     private static GameEventManager _instance;
     public static GameEventManager Instance { get { return _instance; } }
-    private Dictionary<string, GameEvent> _gameEventContainers = new Dictionary<string, GameEvent>();
-    [SerializeField] private GameEvent[] _gameEvents;
+    #endregion
+
+    #region Public Accessors
+    public GameEvent exitGame { get; private set; }
+    public GameEvent exitMenu { get; private set; }
+    public GameEvent fishBite { get; private set; }
+    public GameEvent fishHooked { get; private set; }
+    #endregion
+
+    #region Private Mutator
+    [SerializeField] private GameEvent _exitGame;
+    [SerializeField] private GameEvent _exitMenu;
+    [SerializeField] private GameEvent _fishBite;
+    [SerializeField] private GameEvent _fishHooked;
     #endregion
 
     #region Monobehaviour
@@ -29,24 +41,10 @@ public class GameEventManager : MonoBehaviour
 
     void Start()
     {
-        foreach(GameEvent gameEvent in _gameEvents)
-        {
-            _gameEventContainers.Add(gameEvent.name, gameEvent);
-        }
-    }
-    #endregion
-
-    #region Game Event Accessor
-    public GameEvent GetGameEvent(string name)
-    {
-        GameEvent gameEvent;
-
-        if (_gameEventContainers.TryGetValue(name, out gameEvent))
-            return gameEvent;
-        else
-            Debug.LogException(new NullReferenceException($"cannot find game event with name {name}"));
-
-        return null;
+        exitGame = _exitGame;
+        exitMenu = _exitMenu;
+        fishBite = _fishBite;
+        fishHooked = _fishHooked;
     }
     #endregion
 }

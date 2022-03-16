@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: TempFish
   m_EditorClassIdentifier: 
   _mesh: {fileID: -3537709356157935800, guid: b2100cdae87f6214ea3c38ee20eb3bc8, type: 3}
+  _material: {fileID: 2100000, guid: 22dd14116c8021e45b94af303b626b75, type: 2}
   _maxFatigue: 10
-  _rarity: 10
   _recoveryRate: 10

@@ -30,7 +30,7 @@ public class PlayerFishingState : PlayerBaseState
             return;
         }
 
-        if(InputManager.Instance.LeftAction())
+        if(InputManager.Instance.RightAction())
         {
             stateManager.SwitchState(stateManager.playerCastState);
             return;

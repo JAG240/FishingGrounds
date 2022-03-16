@@ -22,15 +22,15 @@ public class PauseMenuDocumentLogic : UIBaseDocument
 
     public override void SubscribeEvents(UIManager uiManager)
     {
-        _resume.clicked += GameEventManager.Instance.GetGameEvent("ExitMenu").InvokeEvent;
-        _exit.clicked += GameEventManager.Instance.GetGameEvent("ExitGame").InvokeEvent;
+        _resume.clicked += GameEventManager.Instance.exitMenu.InvokeEvent;
+        _exit.clicked += GameEventManager.Instance.exitGame.InvokeEvent;
         _exit.clicked += uiManager.sceneLoader.ExitToMainMenu;
     }
 
     public override void UnsubscribeEvents(UIManager uiManager)
     {
-        _resume.clicked -= GameEventManager.Instance.GetGameEvent("ExitMenu").InvokeEvent;
-        _exit.clicked -= GameEventManager.Instance.GetGameEvent("ExitGame").InvokeEvent;
+        _resume.clicked -= GameEventManager.Instance.exitMenu.InvokeEvent;
+        _exit.clicked -= GameEventManager.Instance.exitGame.InvokeEvent;
         _exit.clicked -= uiManager.sceneLoader.ExitToMainMenu;
     }
     #endregion

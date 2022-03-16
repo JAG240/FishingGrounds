@@ -12,20 +12,20 @@ public class PlayerMenuState : PlayerBaseState
             stateManager.bobber.Return();
 
         stateManager.SetPlayerControls(false);
-        GameEventManager.Instance.GetGameEvent("ExitMenu").invokedEvent += ExitMenu;
+        GameEventManager.Instance.exitMenu.invokedEvent += ExitMenu;
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
     }
 
     public override void ExitState(PlayerStateManager stateManager)
     {
-        GameEventManager.Instance.GetGameEvent("ExitMenu").invokedEvent -= ExitMenu;
+        GameEventManager.Instance.exitMenu.invokedEvent -= ExitMenu;
     }
 
     public override void UpdateState(PlayerStateManager stateManager)
     {
         if (InputManager.Instance.PressedEscape())
-            GameEventManager.Instance.GetGameEvent("ExitMenu").InvokeEvent();
+            GameEventManager.Instance.exitMenu.InvokeEvent();
     }
 
     private void ExitMenu()
