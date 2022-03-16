@@ -62,7 +62,7 @@ public class RodControls : MonoBehaviour
         Vector2 mouseInput = _inputManager.GetMouseDelta();
         _localRot = transform.localRotation.eulerAngles;
 
-        float horizontalValue = Mathf.Clamp(_localRot.x - (mouseInput.y * Time.deltaTime * _controlSpeed), 270f, 340f);
+        float horizontalValue = Mathf.Clamp(_localRot.x - (mouseInput.y * Time.deltaTime * _controlSpeed), 270f, 330f);
         float verticalValue = Mathf.Clamp(_localRot.y + (mouseInput.x * Time.deltaTime * _controlSpeed), 120f, 240f);
 
         transform.localRotation = Quaternion.Euler(horizontalValue, verticalValue, _localRot.z);
