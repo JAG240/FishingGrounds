@@ -2,6 +2,7 @@ using UnityEngine;
 using Unity.Netcode;
 public class PlayerHookState : PlayerBaseState
 {
+    private PlayerStateManager _stateManager;
     private RodControls _rodControls;
     private ulong _clientID;
     private int _lastCheck;
@@ -9,7 +10,8 @@ public class PlayerHookState : PlayerBaseState
     private int _biteTimer;
     private int _biteSucces;
     private NetworkTickSystem _tickSystem;
-    private PlayerStateManager _stateManager;
+    private FishBase _currentFish;
+    private Transform _hook;
 
     public override void EnterState(PlayerStateManager stateManager)
     {
@@ -24,12 +26,14 @@ public class PlayerHookState : PlayerBaseState
         _rodControls.RotateCamera(stateManager.bobber.transform);
         _clientID = NetworkManager.Singleton.LocalClientId;
         _lastCheck = 0;
+        _hook = stateManager.bobber.transform.Find("hook");
 
         //calulate bite chance and bite timer (hard coded for now until equipment can be added)
-        _biteChance = 10;
+        _biteChance = 5;
         _biteTimer = 4 * (int)_tickSystem.TickRate; //the number is how many seconds should pass
         _biteSucces = Random.Range(0, _biteChance);
 
+        _rodControls.reelIn += ReelIn;
         stateManager.NetworkManager.NetworkTickSystem.Tick += CheckBite;
         GameEventManager.Instance.fishHooked.invokedEvent += FishHooked;
     }
@@ -38,6 +42,8 @@ public class PlayerHookState : PlayerBaseState
     {
         stateManager.NetworkManager.NetworkTickSystem.Tick -= CheckBite;
         GameEventManager.Instance.fishHooked.invokedEvent -= FishHooked;
+        _rodControls.reelIn -= ReelIn;
+        _currentFish = null;
     }
 
     public override void UpdateState(PlayerStateManager stateManager)
@@ -53,7 +59,14 @@ public class PlayerHookState : PlayerBaseState
 
     private void FishHooked()
     {
+        _stateManager.currentFish = _currentFish;
         _stateManager.SwitchState(_stateManager.playerReelState);
+    }
+
+    private void ReelIn(bool fishOn)
+    {
+        _rodControls.enabled = false;
+        _stateManager.SwitchState(_stateManager.playerFishingState);
     }
 
     private void CheckBite()
@@ -89,6 +102,8 @@ public class PlayerHookState : PlayerBaseState
             return;
 
         Debug.Log("bite!");
+        _currentFish = _stateManager.fishManager.GetFish(_hook.position);
+        _rodControls.bitingFish = _currentFish;
         GameEventManager.Instance.fishBite.InvokeEvent();
     }
 }

@@ -15,7 +15,7 @@ public class FishManager : NetworkBehaviour
         catchTables = GetComponentsInChildren<CatchTable>();
     }
 
-    public GameObject GetFish(Vector3 hookPos)
+    public FishBase GetFish(Vector3 hookPos)
     {
         //This will work for now as there are very few tables. However this might need upgraded when more tables are added. 
         //index 0 should always be a default table
@@ -31,10 +31,10 @@ public class FishManager : NetworkBehaviour
             bestTable = table;
         }
 
-        FishBase fishBase = bestTable.GetFish();
+        /*FishBase fishBase = bestTable.GetFish();
         GameObject newFish = new GameObject(fishBase.name);
-        newFish.AddComponent<Fish>().BuildFish(fishBase, hookPos);
+        newFish.AddComponent<Fish>().BuildFish(fishBase, hookPos);*/
 
-        return newFish;
+        return bestTable.GetFish();
     }
 }

@@ -25,14 +25,14 @@ public class PlayerCastState : PlayerBaseState
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
 
-        stateManager.bobber.exitCast += ExitCastSuccessfully;
+        stateManager.bobber.exitCast += ExitCast;
         stateManager.bobber.Return();
     }
 
     public override void ExitState(PlayerStateManager stateManager)
     {
         _castBarObj.SetActive(false);
-        stateManager.bobber.exitCast -= ExitCastSuccessfully;
+        stateManager.bobber.exitCast -= ExitCast;
     }
 
     public override void UpdateState(PlayerStateManager stateManager)
@@ -80,7 +80,7 @@ public class PlayerCastState : PlayerBaseState
         }
     }
 
-    private void ExitCastSuccessfully(bool state)
+    private void ExitCast(bool state)
     {
         _casting = false;
 

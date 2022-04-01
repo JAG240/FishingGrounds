@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,12 +13,15 @@ public class RodControls : MonoBehaviour
     [SerializeField] private float _lookTimer = 1.0f;
     [SerializeField] private float _controlSpeed = 2.0f;
     [SerializeField] private float _hookTimer = 1.0f;
-    [SerializeField] private float _hookStrength = 50.0f; //50 is a good starting point, increase this value to make the player pull hard on the mouse to hook
+    //[SerializeField] private float _hookStrength = 50.0f; //50 is a good starting point, increase this value to make the player pull hard on the mouse to hook
     [SerializeField] private float _reelSpeed = 2f;
+    [SerializeField] private float _reelInDistance = 2f;
     #endregion
 
     #region Vars
     public Fish hookedFish;
+    public FishBase bitingFish;
+    public Action<bool> reelIn; 
     private InputManager _inputManager;
     private Vector3 _activePos;
     private Vector3 _inactivePos;
@@ -62,6 +66,12 @@ public class RodControls : MonoBehaviour
         if (!_enableRodControls)
             return;
         
+        if(Vector3.Distance(_bobber.transform.position, transform.position) <= _reelInDistance)
+        {
+            bool fishOn = hookedFish ? true : false;
+            reelIn?.Invoke(fishOn);
+        }
+
         ControlRod();
         ControlReel();
         
@@ -92,8 +102,10 @@ public class RodControls : MonoBehaviour
 
                 _bobber.transform.position -= direction * Time.deltaTime * _reelSpeed;
             }
-
-            //reel in the fish
+            else
+            {
+                //reel in the fish
+            }
         }
     }
 
@@ -133,7 +145,7 @@ public class RodControls : MonoBehaviour
             Vector2 mouseDelta = InputManager.Instance.GetMouseDelta();
             timer += Time.deltaTime;
 
-            if(mouseDelta.y < 0 && Mathf.Abs(mouseDelta.y) + Mathf.Abs(mouseDelta.x) > _hookStrength)
+            if(mouseDelta.y < 0 && Mathf.Abs(mouseDelta.y) + Mathf.Abs(mouseDelta.x) > bitingFish.hookStrength)
             {
                 GameEventManager.Instance.fishHooked.InvokeEvent();
                 break;

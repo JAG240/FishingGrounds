@@ -21,16 +21,15 @@ public class FishingLine : MonoBehaviour
         _lineRenderer.positionCount = 2;
         Application.onBeforeRender += UpdateLine;
         GameEventManager.Instance.fishBite.invokedEvent += Bite;
+        GameEventManager.Instance.fishHooked.invokedEvent += Hooked;
+        _bobber.GetComponent<Bobber>().exitCast += Casted;
     }
 
     void OnDisable()
     {
         Application.onBeforeRender -= UpdateLine;
-    }
-
-    void Update()
-    {
-
+        GameEventManager.Instance.fishBite.invokedEvent -= Bite;
+        GameEventManager.Instance.fishHooked.invokedEvent -= Hooked;
     }
 
     private void UpdateLine()
@@ -49,6 +48,24 @@ public class FishingLine : MonoBehaviour
             pos.y = Mathf.Lerp(_rodTip.position.y, _bobber.position.y, Mathf.Pow(interpolator, Mathf.Pow(interpolator, _sag * interpolator)));
             _lineRenderer.SetPosition(x, pos);
         }
+    }
+
+    //Create a method to set sag if fish is not hooked successfully
+    //Create a mothod to decrease sag if the user is reeling
+
+    private void Hooked()
+    {
+        StopAllCoroutines();
+        StartCoroutine(ChangeSag(0, 0.1f));
+    }
+
+    private void Casted(bool success)
+    {
+        if (!success)
+            return; 
+
+        StopAllCoroutines();
+        StartCoroutine(ChangeSag(3.5f, 1f));
     }
 
     private void Bite()

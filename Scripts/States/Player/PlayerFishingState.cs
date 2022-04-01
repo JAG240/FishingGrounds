@@ -3,6 +3,9 @@ public class PlayerFishingState : PlayerBaseState
 {
     public override void EnterState(PlayerStateManager stateManager)
     {
+        if (stateManager.bobber.isActiveAndEnabled)
+            stateManager.bobber.Return();
+
         stateManager.fishingRod.SetActive(true);
         stateManager.bobber.gameObject.SetActive(true);
         stateManager.SetPlayerControls(true);

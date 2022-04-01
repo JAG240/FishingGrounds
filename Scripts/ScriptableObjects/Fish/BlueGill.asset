@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fc0ee41d82f020f46bef399815a24acb, type: 3}
-  m_Name: TempFish
+  m_Name: BlueGill
   m_EditorClassIdentifier: 
-  <mesh>k__BackingField: {fileID: -3537709356157935800, guid: b2100cdae87f6214ea3c38ee20eb3bc8, type: 3}
-  <material>k__BackingField: {fileID: 2100000, guid: 22dd14116c8021e45b94af303b626b75, type: 2}
+  <mesh>k__BackingField: {fileID: -3537709356157935800, guid: 73e7c266a8809bb47826f420c50f217e, type: 3}
+  <material>k__BackingField: {fileID: 2100000, guid: 2e39d24861303ec4db1455a6d6eca10d, type: 2}
   <maxFatigue>k__BackingField: 10
   <recoveryRate>k__BackingField: 10
   <hookStrength>k__BackingField: 50

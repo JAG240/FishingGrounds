@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Fish : MonoBehaviour
@@ -14,6 +12,15 @@ public class Fish : MonoBehaviour
         MeshRenderer meshRenderer = gameObject.AddComponent<MeshRenderer>();
         meshRenderer.material = fishbase.material;
 
+        float size = Random.Range(fishbase.minSize, fishbase.maxSize);
+        Vector3 scale = transform.localScale;
+        scale.Set(size, size, size);
+        transform.localScale = scale;
+
         transform.position = pos;
+
+        Vector3 rot = transform.eulerAngles;
+        rot.Set(180f, 0f, 0f);
+        transform.eulerAngles = rot;
     }
 }

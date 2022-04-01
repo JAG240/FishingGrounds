@@ -19,6 +19,7 @@ public class PlayerStateManager : NetworkBehaviour
     #endregion
 
     #region Vars
+    public FishBase currentFish;
     private PlayerBaseState _currentState;
     private PlayerMovement _playerMovement;
     private CameraController _cameraController;
@@ -63,6 +64,7 @@ public class PlayerStateManager : NetworkBehaviour
         _currentState.ExitState(this);
         _currentState = newState;
         _currentState.EnterState(this);
+        currentFish = null;
     }
 
     private void ExitGame()
