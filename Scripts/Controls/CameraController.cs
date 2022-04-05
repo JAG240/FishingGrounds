@@ -32,6 +32,11 @@ public class CameraController : NetworkBehaviour
             return;
         }
 
+        Camera cam = GetComponent<Camera>();
+
+        if(cam.depthTextureMode != DepthTextureMode.Depth)
+            cam.depthTextureMode = DepthTextureMode.Depth;
+
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }

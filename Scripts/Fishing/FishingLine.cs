@@ -5,24 +5,32 @@ using UnityEngine;
 public class FishingLine : MonoBehaviour
 {
     [SerializeField] private float _sag = 0.4f;
-    private LineRenderer _lineRenderer;
+    private LineRenderer _bobberLine;
     private Transform _rodTip;
     private Transform _bobber;
     private Rigidbody _bobberBody;
     private float _defaultSag = 3.5f;
+    private LineRenderer _rodLine;
+    private LineRenderer _hookLine;
+    private Transform _hook;
+    private RodControls _rodControls;
 
     void OnEnable()
     {
-        _lineRenderer = GetComponent<LineRenderer>();
+        _bobberLine = GetComponent<LineRenderer>();
         _bobber = transform.parent.Find("bobber");
         _bobberBody = _bobber.GetComponent<Rigidbody>();
         _rodTip = transform.Find("RodTip");
+        _hookLine = _bobber.GetComponent<LineRenderer>();
+        _hook = _bobber.Find("hook_end").transform;
+        _rodControls = _rodTip.parent.GetComponent<RodControls>();
 
-        _lineRenderer.positionCount = 2;
+        _bobberLine.positionCount = 2;
         Application.onBeforeRender += UpdateLine;
         GameEventManager.Instance.fishBite.invokedEvent += Bite;
         GameEventManager.Instance.fishHooked.invokedEvent += Hooked;
         _bobber.GetComponent<Bobber>().exitCast += Casted;
+        _rodControls.updateReelState += UpdateReelState;
     }
 
     void OnDisable()
@@ -30,28 +38,36 @@ public class FishingLine : MonoBehaviour
         Application.onBeforeRender -= UpdateLine;
         GameEventManager.Instance.fishBite.invokedEvent -= Bite;
         GameEventManager.Instance.fishHooked.invokedEvent -= Hooked;
+        _rodControls.updateReelState -= UpdateReelState;
     }
 
     private void UpdateLine()
     {
+        UpdateBobberLine();
+        UpdateHookLine();
+    }
+
+    #region Bobber Line Methods
+    //Create a method to set sag if fish is not hooked successfully and bobber it returned? 
+    //Create a method to decrease sag if the user is reeling
+
+    private void UpdateBobberLine()
+    {
         int positions = Mathf.Max(Mathf.RoundToInt(Vector3.Distance(_rodTip.position, _bobber.position)) * 4, 2);
 
-        if(_lineRenderer.positionCount != positions)
-                _lineRenderer.positionCount = positions;
+        if (_bobberLine.positionCount != positions)
+            _bobberLine.positionCount = positions;
 
-        for(int x = 0; x < positions; x++)
+        for (int x = 0; x < positions; x++)
         {
             Vector3 pos;
             float interpolator = (float)x / (positions - 1);
             pos.x = Mathf.Lerp(_rodTip.position.x, _bobber.position.x, interpolator);
             pos.z = Mathf.Lerp(_rodTip.position.z, _bobber.position.z, interpolator);
             pos.y = Mathf.Lerp(_rodTip.position.y, _bobber.position.y, Mathf.Pow(interpolator, Mathf.Pow(interpolator, _sag * interpolator)));
-            _lineRenderer.SetPosition(x, pos);
+            _bobberLine.SetPosition(x, pos);
         }
     }
-
-    //Create a method to set sag if fish is not hooked successfully
-    //Create a mothod to decrease sag if the user is reeling
 
     private void Hooked()
     {
@@ -95,4 +111,27 @@ public class FishingLine : MonoBehaviour
         _sag = targetSag;
         yield return null;
     }
+    #endregion
+
+    //true for reeling false for not reeling 
+    private void UpdateReelState(bool state)
+    {
+        if(state)
+        {
+            StopAllCoroutines();
+            StartCoroutine(ChangeSag(0.2f, 0.1f));
+        }
+        else
+        {
+            StopAllCoroutines();
+            StartCoroutine(ChangeSag(_defaultSag, 1f));
+        }
+    }
+
+    private void UpdateHookLine()
+    {
+        _hookLine.SetPosition(0, _bobber.position);
+        _hookLine.SetPosition(1, _hook.position);
+    }
+
 }

@@ -41,7 +41,10 @@ public class PlayerReelState : PlayerBaseState
     private void BuildFish()
     {
         GameObject newFish = new GameObject(_hookedFish.name);
-        newFish.AddComponent<Fish>().BuildFish(_hookedFish, _hook.position);
+        Fish fishScript = newFish.AddComponent<Fish>();
+        fishScript.rodControls = _rodControls;
+        fishScript.BuildFish(_hookedFish, _hook.position);
+        _rodControls.hookedFish = fishScript;
         newFish.transform.parent = _hook;
         newFish.transform.position -= new Vector3(0f, newFish.transform.localScale.y / 2f, 0f);
         newFish.transform.rotation.eulerAngles.Set(270f, 0f, 0f);

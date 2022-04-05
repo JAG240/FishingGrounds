@@ -13,7 +13,6 @@ public class RodControls : MonoBehaviour
     [SerializeField] private float _lookTimer = 1.0f;
     [SerializeField] private float _controlSpeed = 2.0f;
     [SerializeField] private float _hookTimer = 1.0f;
-    //[SerializeField] private float _hookStrength = 50.0f; //50 is a good starting point, increase this value to make the player pull hard on the mouse to hook
     [SerializeField] private float _reelSpeed = 2f;
     [SerializeField] private float _reelInDistance = 2f;
     #endregion
@@ -21,7 +20,9 @@ public class RodControls : MonoBehaviour
     #region Vars
     public Fish hookedFish;
     public FishBase bitingFish;
-    public Action<bool> reelIn; 
+    public Action<bool> reelIn;
+    public Action<bool> updateReelState;
+    private bool _currentReelState = false;
     private InputManager _inputManager;
     private Vector3 _activePos;
     private Vector3 _inactivePos;
@@ -29,7 +30,7 @@ public class RodControls : MonoBehaviour
     private bool _enableRodControls = false;
     private Vector3 _localRot;
     private Vector3 _localStartRot;
-    [SerializeField] private Bobber _bobber;
+    private Bobber _bobber;
     #endregion
 
     #region Monobehavior
@@ -94,6 +95,12 @@ public class RodControls : MonoBehaviour
     {
         if(InputManager.Instance.LeftActionHeld())
         {
+            if(!_currentReelState)
+            {
+                _currentReelState = true;
+                updateReelState.Invoke(true);
+            }
+
             if(!hookedFish)
             {
                 Vector3 direction = _bobber.transform.position - transform.position;
@@ -104,7 +111,15 @@ public class RodControls : MonoBehaviour
             }
             else
             {
-                //reel in the fish
+                //controls to reel fish in with fish hooked
+            }
+        }
+        else
+        {
+            if(_currentReelState && !hookedFish)
+            {
+                _currentReelState = false;
+                updateReelState.Invoke(false);
             }
         }
     }

@@ -8,7 +8,7 @@ public class PlayerHookState : PlayerBaseState
     private int _lastCheck;
     private int _biteChance;
     private int _biteTimer;
-    private int _biteSucces;
+    private int _biteSuccess;
     private NetworkTickSystem _tickSystem;
     private FishBase _currentFish;
     private Transform _hook;
@@ -31,7 +31,7 @@ public class PlayerHookState : PlayerBaseState
         //calulate bite chance and bite timer (hard coded for now until equipment can be added)
         _biteChance = 5;
         _biteTimer = 4 * (int)_tickSystem.TickRate; //the number is how many seconds should pass
-        _biteSucces = Random.Range(0, _biteChance);
+        _biteSuccess = Random.Range(0, _biteChance);
 
         _rodControls.reelIn += ReelIn;
         stateManager.NetworkManager.NetworkTickSystem.Tick += CheckBite;
@@ -55,6 +55,14 @@ public class PlayerHookState : PlayerBaseState
             stateManager.SwitchState(stateManager.playerMenuState);
             return;
         }
+
+#if UNITY_EDITOR
+        //for testing causes guarenteed bite
+        if(InputManager.Instance.PressedJump())
+        {
+            OverrideBiteChances(_clientID, _biteSuccess);
+        }
+#endif
     }
 
     private void FishHooked()
@@ -83,7 +91,7 @@ public class PlayerHookState : PlayerBaseState
         _lastCheck = currentTick;
     }
 
-    [ServerRpc(RequireOwnership = false)]
+    [ServerRpc(RequireOwnership = true)]
     private void GetBiteServerRPC(ulong clientID, int odds)
     {
         //randomly select a number
@@ -92,13 +100,19 @@ public class PlayerHookState : PlayerBaseState
         GetBiteResultClientRPC(clientID, result);
     }
 
+    [ServerRpc(RequireOwnership = true)]
+    private void OverrideBiteChances(ulong clientID, int successNum)
+    {
+        GetBiteResultClientRPC(clientID, successNum);
+    }
+
     [ClientRpc]
     private void GetBiteResultClientRPC(ulong clientID, int result)
     {
         if (clientID != NetworkManager.Singleton.LocalClientId)
             return;
 
-        if (result != _biteSucces)
+        if (result != _biteSuccess)
             return;
 
         Debug.Log("bite!");

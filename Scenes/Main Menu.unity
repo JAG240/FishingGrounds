@@ -348,8 +348,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _fishTable:
-  - fishBase: {fileID: 11400000, guid: 643c7e9f01910b74799973a053b86f29, type: 2}
-    rarity: 1
   - fishBase: {fileID: 11400000, guid: 4e3c9fb7555daa947a71cfa8cd557883, type: 2}
     rarity: 1
   _radius: 0
